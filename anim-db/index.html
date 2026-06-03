@@ -1,0 +1,3714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANIM.DB — Animation Component Library</title>
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES
+   ============================================================ */
+:root {
+  --color-bg: #0f0f0f;
+  --color-sidebar: #141414;
+  --color-card: #1a1a1a;
+  --color-card-hover: #202020;
+  --color-border: #2a2a2a;
+  --color-border-hover: #f0c040;
+  --color-accent: #f0c040;
+  --color-accent-dim: rgba(240,192,64,0.15);
+  --color-text: #ffffff;
+  --color-text-muted: #888;
+  --color-text-dim: #555;
+  --color-overlay: rgba(0,0,0,0.85);
+  --color-code-bg: #111;
+  --sidebar-width: 280px;
+  --panel-width: 360px;
+  --transition-fast: 0.15s ease;
+  --transition-med: 0.3s ease;
+  --transition-slow: 0.5s cubic-bezier(0.16,1,0.3,1);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --font-ui: system-ui, -apple-system, sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ============================================================
+   LEFT SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--color-sidebar);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.sidebar-header {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-title {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.app-subtitle {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-search {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.search-input {
+  width: 100%;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px 9px 34px;
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+}
+
+.search-input:focus {
+  border-color: var(--color-accent);
+}
+
+.search-input::placeholder { color: var(--color-text-dim); }
+
+.sidebar-nav {
+  padding: 12px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.nav-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-dim);
+  padding: 8px 20px 4px;
+  font-weight: 600;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 20px;
+  cursor: pointer;
+  border-radius: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: var(--color-accent-dim);
+  color: var(--color-text);
+}
+
+.nav-item.active {
+  color: var(--color-accent);
+  border-left-color: var(--color-accent);
+  background: var(--color-accent-dim);
+  font-weight: 600;
+}
+
+.nav-badge {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  min-width: 22px;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.nav-item.active .nav-badge,
+.nav-item:hover .nav-badge {
+  background: var(--color-accent);
+  color: #000;
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  transition: margin-right var(--transition-med);
+}
+
+.main-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.main-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.main-title span {
+  color: var(--color-text-muted);
+  font-weight: 400;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--color-card);
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: all var(--transition-fast);
+}
+
+.view-btn.active {
+  background: var(--color-accent);
+  color: #000;
+  font-weight: 600;
+}
+
+.grid-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.grid-scroll::-webkit-scrollbar { width: 6px; }
+.grid-scroll::-webkit-scrollbar-track { background: transparent; }
+.grid-scroll::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+
+/* ============================================================
+   COMPONENT GRID
+   ============================================================ */
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.component-grid.list-view {
+  grid-template-columns: 1fr;
+}
+
+.component-grid.list-view .card-preview {
+  height: 120px;
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.component-grid.list-view .card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.component-grid.list-view .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Empty state */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--color-text-muted);
+}
+.empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--color-text); }
+
+/* ============================================================
+   COMPONENT CARD
+   ============================================================ */
+.card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: scale(1.02);
+  border-color: var(--color-border-hover);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(240,192,64,0.1);
+}
+
+.card.selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(240,192,64,0.25);
+}
+
+.card-preview {
+  height: 200px;
+  width: 100%;
+  background: #111;
+  border-bottom: 1px solid var(--color-border);
+  overflow: hidden;
+  position: relative;
+}
+
+.card-preview iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  pointer-events: none;
+}
+
+.card-body {
+  padding: 14px 16px;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.category-badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--color-accent-dim);
+  color: var(--color-accent);
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tag:hover {
+  background: var(--color-accent);
+  color: #000;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+  font-family: var(--font-ui);
+  text-align: center;
+}
+
+.btn-preview {
+  background: var(--color-border);
+  color: var(--color-text);
+}
+.btn-preview:hover { background: #333; }
+
+.btn-copy {
+  background: var(--color-accent);
+  color: #000;
+}
+.btn-copy:hover { background: #ffd060; }
+.btn-copy.copied {
+  background: #2a9d2a;
+  color: #fff;
+}
+
+/* ============================================================
+   RIGHT DETAIL PANEL
+   ============================================================ */
+.detail-panel {
+  width: var(--panel-width);
+  min-width: var(--panel-width);
+  background: var(--color-sidebar);
+  border-left: 1px solid var(--color-border);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--transition-slow);
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.detail-panel.open {
+  transform: translateX(0);
+}
+
+.detail-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.detail-header-info {}
+
+.detail-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.close-btn {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  margin-left: 12px;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  background: #333;
+  color: var(--color-text);
+  border-color: #444;
+}
+
+.detail-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.detail-body::-webkit-scrollbar { width: 4px; }
+.detail-body::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.detail-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-dim);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.detail-desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.detail-when {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  background: var(--color-accent-dim);
+  border-left: 3px solid var(--color-accent);
+  padding: 10px 12px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Code block */
+.code-block-wrapper {
+  position: relative;
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  max-height: 280px;
+  overflow: auto;
+}
+
+.code-block-wrapper::-webkit-scrollbar { width: 4px; height: 4px; }
+.code-block-wrapper::-webkit-scrollbar-thumb { background: var(--color-border); }
+
+.code-block {
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #ccc;
+  white-space: pre;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.detail-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.btn-copy-all {
+  width: 100%;
+  padding: 12px;
+  font-size: 13px;
+  background: var(--color-accent);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  transition: all var(--transition-fast);
+}
+
+.btn-copy-all:hover { background: #ffd060; }
+.btn-copy-all.copied { background: #2a9d2a; color: #fff; }
+
+/* ============================================================
+   FULLSCREEN PREVIEW MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-med);
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  width: 90vw;
+  max-width: 1200px;
+  height: 85vh;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.96) translateY(8px);
+  transition: transform var(--transition-slow);
+}
+
+.modal-overlay.open .modal {
+  transform: scale(1) translateY(0);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: var(--color-sidebar);
+}
+
+.modal-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modal-close {
+  background: var(--color-border);
+  border: none;
+  color: var(--color-text);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  line-height: 1;
+}
+
+.modal-close:hover { background: #444; }
+
+.modal-iframe-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.modal-iframe-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* ============================================================
+   SCROLLBARS (global)
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #444; }
+
+/* ============================================================
+   MOBILE RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .app { flex-direction: column; overflow: auto; height: auto; }
+
+  .sidebar {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .sidebar-header { padding: 12px 16px; border-bottom: none; border-right: 1px solid var(--color-border); }
+  .app-subtitle { display: none; }
+
+  .sidebar-search { padding: 10px; border-bottom: none; border-right: 1px solid var(--color-border); }
+  .search-input { width: 160px; }
+
+  .sidebar-nav { display: flex; flex-direction: row; padding: 8px; overflow-x: auto; white-space: nowrap; flex: 1; }
+  .nav-label { display: none; }
+  .nav-item { border-left: none; border-bottom: 3px solid transparent; padding: 8px 12px; border-radius: var(--radius-sm); }
+  .nav-item.active { border-bottom-color: var(--color-accent); }
+
+  .main { height: auto; min-height: 100vh; }
+  .grid-scroll { overflow-y: visible; padding: 16px; }
+
+  .detail-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    min-width: 0;
+    height: 75vh;
+    transform: translateY(100%);
+    border-left: none;
+    border-top: 1px solid var(--color-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .detail-panel.open { transform: translateY(0); }
+
+  .component-grid { grid-template-columns: 1fr; }
+
+  .modal { width: 100vw; height: 100vh; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     APP SHELL
+     ============================================================ -->
+<div class="app" id="app">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="app-title">ANIM.DB</div>
+      <div class="app-subtitle">Animation Component Library</div>
+    </div>
+    <div class="sidebar-search">
+      <input
+        class="search-input"
+        id="searchInput"
+        type="text"
+        placeholder="Search components..."
+        autocomplete="off"
+        spellcheck="false"
+      >
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Categories</div>
+      <!-- Populated by JS -->
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main">
+    <div class="main-header">
+      <div class="main-title" id="mainTitle">All Components <span id="resultCount"></span></div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view">⊞</button>
+        <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List view">≡</button>
+      </div>
+    </div>
+    <div class="grid-scroll">
+      <div class="component-grid" id="componentGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT DETAIL PANEL -->
+  <aside class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div class="detail-header-info">
+        <div class="detail-name" id="detailName">Component Name</div>
+        <span class="category-badge" id="detailCategory">Category</span>
+      </div>
+      <button class="close-btn" onclick="closeDetail()" title="Close">✕</button>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-section-label">Description</div>
+        <div class="detail-desc" id="detailDesc"></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">When to use</div>
+        <div class="detail-when" id="detailWhen"></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Tags</div>
+        <div class="detail-tags" id="detailTags"></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Source Code</div>
+        <div class="code-block-wrapper">
+          <pre class="code-block" id="detailCode"></pre>
+        </div>
+      </div>
+    </div>
+    <div class="detail-footer">
+      <button class="btn-copy-all" id="btnCopyAll" onclick="copyAllCode()">Copy All Code</button>
+    </div>
+  </aside>
+
+</div>
+
+<!-- FULLSCREEN PREVIEW MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Preview</div>
+      <div class="modal-actions">
+        <button class="btn btn-copy" id="modalCopyBtn" onclick="copyModalCode()" style="flex:none;padding:7px 14px;font-size:12px;">Copy Code</button>
+        <button class="modal-close" onclick="closeModal()" title="Close (ESC)">✕</button>
+      </div>
+    </div>
+    <div class="modal-iframe-wrap" id="modalIframeWrap">
+      <!-- iframe injected by JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   COMPONENT DATA
+   Each component has a full self-contained HTML snippet as `code`
+   ============================================================ */
+
+const COMPONENTS = [
+
+  /* ─────────────────────────────────────────────────────────
+     1. CUSTOM CURSOR FOLLOWER
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'custom-cursor',
+    name: 'Custom Cursor Follower',
+    category: 'Cursor & Mouse',
+    tags: ['cursor', 'mouse', 'hero', 'interactive'],
+    description: 'A semi-transparent circular cursor that replaces the default cursor and follows the mouse with a smooth lag effect. The cursor morphs on hover over interactive elements.',
+    whenToUse: 'Use in hero sections, portfolio sites, or creative landing pages where you want a premium "boutique agency" feel. Pairs well with dark backgrounds and minimal UI.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom Cursor</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0d0d0d;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    height: 100vh;
+    cursor: none;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* The custom cursor circle */
+  #cursor {
+    position: fixed;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(240, 192, 64, 0.12);
+    border: 1.5px solid rgba(240, 192, 64, 0.5);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    z-index: 9999;
+    /* Use translate3d for GPU-accelerated movement */
+    transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+    transition: transform 0.12s cubic-bezier(0.16,1,0.3,1),
+                width 0.3s ease,
+                height 0.3s ease,
+                background 0.3s ease;
+  }
+
+  /* Small inner dot */
+  #cursor-dot {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f0c040;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+    transition: transform 0.04s linear;
+  }
+
+  /* Cursor expands on hover over interactive elements */
+  body.hovering #cursor {
+    width: 56px;
+    height: 56px;
+    background: rgba(240, 192, 64, 0.22);
+    border-color: rgba(240, 192, 64, 0.9);
+  }
+
+  .demo-area {
+    text-align: center;
+    padding: 40px;
+    max-width: 520px;
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 60%, #888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  p {
+    color: #888;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .hover-btn {
+    display: inline-block;
+    padding: 13px 28px;
+    background: transparent;
+    border: 1.5px solid #f0c040;
+    color: #f0c040;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: none;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .hover-btn:hover { background: rgba(240,192,64,0.12); }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<div class="demo-area">
+  <h1>Move your cursor around</h1>
+  <p>The circular cursor follows your mouse with a smooth lag. It morphs when hovering interactive elements.</p>
+  <button class="hover-btn">Hover over me</button>
+</div>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursor-dot');
+
+  // Track raw mouse position
+  let mouseX = -200, mouseY = -200;
+  // Smoothed cursor position
+  let curX = -200, curY = -200;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    // Inner dot follows instantly
+    dot.style.transform = \`translate3d(\${mouseX}px, \${mouseY}px, 0) translate(-50%, -50%)\`;
+  });
+
+  // Animate main cursor with lag via requestAnimationFrame
+  function animateCursor() {
+    // Lerp toward mouse position for smooth lag
+    curX += (mouseX - curX) * 0.18;
+    curY += (mouseY - curY) * 0.18;
+    cursor.style.transform = \`translate3d(\${curX}px, \${curY}px, 0) translate(-50%, -50%)\`;
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Detect hover on interactive elements
+  const interactives = document.querySelectorAll('a, button, [role="button"], input, textarea, select');
+  interactives.forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  });
+
+  // Hide cursor when leaving window
+  document.addEventListener('mouseleave', () => {
+    cursor.style.opacity = '0';
+    dot.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    cursor.style.opacity = '1';
+    dot.style.opacity = '1';
+  });
+<\/script>
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     2. SCROLL FADE + SLIDE UP REVEAL
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'scroll-reveal',
+    name: 'Scroll Fade + Slide Up Reveal',
+    category: 'Scroll Animations',
+    tags: ['scroll', 'fade', 'reveal', 'IntersectionObserver'],
+    description: 'Elements start invisible (opacity 0, translateY 40px) and animate into view when they enter the viewport. Uses IntersectionObserver for performance. Once revealed, they stay visible.',
+    whenToUse: 'Apply to feature sections, testimonials, pricing cards, or any content-heavy page where you want to guide the user\'s attention progressively downward. Works on virtually any project.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scroll Reveal</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0f0f0f;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    padding: 0 24px;
+  }
+
+  .hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid #222;
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 54px);
+    font-weight: 700;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #fff 60%, #666);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    margin-top: 16px;
+    color: #666;
+    font-size: 16px;
+  }
+
+  .section {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 0;
+  }
+
+  /* ─── Reveal animation ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger delay on siblings */
+  .reveal:nth-child(2) { transition-delay: 0.1s; }
+  .reveal:nth-child(3) { transition-delay: 0.2s; }
+  .reveal:nth-child(4) { transition-delay: 0.3s; }
+
+  /* ─── Content blocks ─── */
+  .block {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  .block-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .block h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+
+  .block p {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .block-accent {
+    border-left: 3px solid #f0c040;
+    background: rgba(240,192,64,0.05);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div>
+    <h1>Scroll down to reveal</h1>
+    <p>↓ Blocks animate in as they enter the viewport</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="block reveal block-accent">
+    <div class="block-icon">✦</div>
+    <h2>Smooth Entrance</h2>
+    <p>Each element fades in and slides up from below using a spring-like easing curve, creating a natural, premium feel that doesn't feel mechanical.</p>
+  </div>
+
+  <div class="block reveal">
+    <div class="block-icon">◈</div>
+    <h2>IntersectionObserver</h2>
+    <p>Uses the native browser API — no scroll event listeners, no layout thrashing. Fires once when the element crosses the 20% visibility threshold.</p>
+  </div>
+
+  <div class="block reveal">
+    <div class="block-icon">⬡</div>
+    <h2>Staggered Timing</h2>
+    <p>Multiple elements in the same container can have staggered delays, so they cascade in sequence rather than all appearing at once.</p>
+  </div>
+
+  <div class="block reveal block-accent">
+    <div class="block-icon">◆</div>
+    <h2>Zero Dependencies</h2>
+    <p>Pure vanilla JS and CSS. No GSAP, no ScrollReveal. Drop it anywhere and it just works. The observer disconnects after triggering to free memory.</p>
+  </div>
+</div>
+
+<div style="height:80px"></div>
+
+<script>
+  // Create one shared observer for all .reveal elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Unobserve after revealing — element stays visible
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.2 // Trigger when 20% of the element is visible
+  });
+
+  // Observe all reveal elements
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+<\/script>
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     3. STICKY STACKING CARDS
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'sticky-cards',
+    name: 'Sticky Stacking Cards',
+    category: 'Layout & Stacking',
+    tags: ['sticky', 'scroll', 'portfolio', 'cards', 'stacking'],
+    description: 'Cards stack on top of each other as you scroll. Each card is position:sticky inside a tall container, creating a cinematic layered reveal effect. Pure CSS — no JavaScript.',
+    whenToUse: 'Ideal for portfolio case studies, feature breakdowns, timeline storytelling, or any narrative that unfolds section by section. The pure-CSS approach means zero JS overhead.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sticky Stacking Cards</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #0a0a0a;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+  }
+
+  .intro {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .intro h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .intro p { color: #666; font-size: 15px; }
+
+  .scroll-hint {
+    margin-top: 40px;
+    color: #444;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* ─── The stacking mechanism ───
+     Each card is position:sticky so it "sticks" at the top
+     while subsequent cards scroll over it.
+     The wrapper is tall enough to give each card scroll time.
+  ─── */
+  .cards-wrapper {
+    /* Height = number of cards × 100vh gives each card its own scroll phase */
+    height: calc(5 * 100vh);
+  }
+
+  .card {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  /* Each card has a subtly different dark shade */
+  .card:nth-child(1) { background: #111111; z-index: 1; }
+  .card:nth-child(2) { background: #161616; z-index: 2; }
+  .card:nth-child(3) { background: #1c1c1c; z-index: 3; }
+  .card:nth-child(4) { background: #121212; z-index: 4; }
+  .card:nth-child(5) { background: #191919; z-index: 5; }
+
+  .card-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #f0c040;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  .card h2 {
+    font-size: clamp(32px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    max-width: 700px;
+  }
+
+  .card p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 520px;
+  }
+
+  /* Accent line at bottom of each card */
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #f0c040, transparent);
+    opacity: 0.3;
+  }
+
+  .card:nth-child(2)::after { opacity: 0.5; }
+  .card:nth-child(3)::after { opacity: 0.7; }
+  .card:nth-child(4)::after { opacity: 0.9; }
+  .card:nth-child(5)::after { opacity: 1; }
+
+  .outro {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0c040;
+    color: #000;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .outro h2 { font-size: clamp(28px, 5vw, 48px); font-weight: 700; }
+  .outro p { margin-top: 12px; font-size: 15px; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Sticky Stacking Cards</h1>
+  <p>Pure CSS. No JavaScript. Scroll to see cards layer on top of each other.</p>
+  <div class="scroll-hint">↓ scroll</div>
+</div>
+
+<!-- Cards container — no JS required, just CSS sticky -->
+<div class="cards-wrapper">
+  <div class="card">
+    <div class="card-number">01 / 05</div>
+    <h2>Discovery</h2>
+    <p>We start by deeply understanding your audience, your goals, and the market landscape. No assumptions — just research.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-number">02 / 05</div>
+    <h2>Strategy</h2>
+    <p>A clear roadmap built on evidence. We align stakeholders, define success metrics, and plan every sprint before writing a line of code.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-number">03 / 05</div>
+    <h2>Design</h2>
+    <p>High-fidelity prototypes that feel real enough to test. Every interaction is considered, every pixel intentional.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-number">04 / 05</div>
+    <h2>Build</h2>
+    <p>Production-grade code, shipped in focused two-week cycles. Performance, accessibility, and scalability are non-negotiable.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-number">05 / 05</div>
+    <h2>Launch</h2>
+    <p>We don't disappear at go-live. Monitoring, iteration, and continuous improvement are baked into every engagement.</p>
+  </div>
+</div>
+
+<div class="outro">
+  <div>
+    <h2>Ready to build something great?</h2>
+    <p>Zero JavaScript. All done with position: sticky.</p>
+  </div>
+</div>
+
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     4. SCROLL-PROGRESS STEP HIGHLIGHTER
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'step-highlighter',
+    name: 'Scroll-Progress Step Highlighter',
+    category: 'Scroll Animations',
+    tags: ['scroll', 'progress', 'steps', 'opacity', 'process'],
+    description: 'A list of steps that sequentially highlight as the user scrolls through a tall container. Active steps glow gold while others dim — driven by scroll position math.',
+    whenToUse: 'Perfect for "how it works" process sections, onboarding flows, or feature walkthroughs where you want to guide attention step by step without requiring user clicks.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step Highlighter</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0f0f0f;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+  }
+
+  /* ─── Outer scroll container — tall to give scroll room ─── */
+  .scroll-container {
+    height: 600vh;
+    position: relative;
+  }
+
+  /* ─── Inner panel sticks while container scrolls ─── */
+  .sticky-panel {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    gap: 80px;
+  }
+
+  .panel-left {
+    flex: 1;
+    max-width: 420px;
+  }
+
+  .panel-left .eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #f0c040;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .panel-left h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .panel-left p {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ─── Steps list ─── */
+  .steps-list {
+    flex: 1;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    opacity: 0.2;
+    transform: translateX(0);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    padding: 20px 0;
+    border-bottom: 1px solid #1e1e1e;
+    cursor: default;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step.active {
+    opacity: 1;
+    transform: translateX(6px);
+  }
+
+  .step-num {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #f0c040;
+    opacity: 0.5;
+    padding-top: 3px;
+    min-width: 28px;
+    transition: opacity 0.4s ease;
+  }
+
+  .step.active .step-num { opacity: 1; }
+
+  .step-content {}
+
+  .step-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  /* ─── Progress bar ─── */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: #f0c040;
+    width: 0%;
+    z-index: 100;
+    transition: width 0.1s linear;
+  }
+
+  @media (max-width: 700px) {
+    .sticky-panel { flex-direction: column; gap: 32px; padding: 32px 24px; }
+    .panel-left { max-width: none; }
+    .steps-list { max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="scroll-container" id="scrollContainer">
+  <div class="sticky-panel">
+    <div class="panel-left">
+      <div class="eyebrow">Our Process</div>
+      <h2>How we work with you</h2>
+      <p>Scroll through to explore each phase of our engagement model. Each step builds on the last.</p>
+    </div>
+
+    <div class="steps-list" id="stepsList">
+      <div class="step active">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Discovery Call</div>
+          <div class="step-desc">A 60-minute deep dive into your goals, constraints, timeline, and vision. We come prepared with research.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Proposal & Scoping</div>
+          <div class="step-desc">A detailed project proposal with milestones, deliverables, and a fixed price. No hidden costs.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">Design Sprints</div>
+          <div class="step-desc">Two-week design cycles with regular check-ins. You see work early and often — no big-reveal surprises.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">Development</div>
+          <div class="step-desc">Clean, documented code in weekly releases. Staging environment access throughout the build.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">Launch & Handoff</div>
+          <div class="step-desc">Deployment, QA, documentation, and a training session. You own everything — code, assets, accounts.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const container = document.getElementById('scrollContainer');
+  const steps = document.querySelectorAll('.step');
+  const progressBar = document.getElementById('progressBar');
+  const STEP_COUNT = steps.length;
+
+  function onScroll() {
+    const containerRect = container.getBoundingClientRect();
+    const containerTop = -containerRect.top; // How far we've scrolled into the container
+    const containerScrollHeight = container.offsetHeight - window.innerHeight;
+
+    // Guard: don't compute if not in view
+    if (containerTop < 0 || containerTop > containerScrollHeight) {
+      // Update progress bar even outside container
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = ((window.scrollY / totalScroll) * 100) + '%';
+      return;
+    }
+
+    // Progress from 0 (container top) to 1 (container bottom)
+    const progress = Math.min(Math.max(containerTop / containerScrollHeight, 0), 1);
+
+    // Map progress to step index (0 to STEP_COUNT-1)
+    const activeIndex = Math.min(
+      Math.floor(progress * STEP_COUNT),
+      STEP_COUNT - 1
+    );
+
+    // Highlight only the active step
+    steps.forEach((step, i) => {
+      step.classList.toggle('active', i === activeIndex);
+    });
+
+    // Update global progress bar
+    const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = ((window.scrollY / totalScroll) * 100) + '%';
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // Initialize on load
+<\/script>
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     5. INLINE IMAGE IN HEADING
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'inline-image-heading',
+    name: 'Inline Image in Heading',
+    category: 'Text Effects',
+    tags: ['image', 'heading', 'display', 'editorial', 'inline'],
+    description: 'A photo thumbnail embedded inline within a large display heading, breaking the text flow for a striking editorial effect. No JavaScript required.',
+    whenToUse: 'Great for agency hero sections, editorial blogs, or portfolio "about" pages. Creates instant visual intrigue and breaks the monotony of pure text headers.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inline Image Heading</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0c0c0c;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+    text-align: left;
+  }
+
+  .hero {
+    max-width: 860px;
+    width: 100%;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #f0c040;
+    font-weight: 700;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  /* ─── The headline with inline image ─── */
+  .display-heading {
+    font-size: clamp(36px, 6vw, 80px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  /* ─── Inline image wrapper ─── */
+  .inline-img-wrap {
+    display: inline-flex;
+    align-items: center;
+    width: clamp(80px, 10vw, 120px);
+    height: clamp(64px, 8vw, 96px);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    /* Subtle border to separate from text */
+    box-shadow: 0 0 0 1.5px rgba(255,255,255,0.08);
+    position: relative;
+    top: -2px; /* Optical vertical alignment */
+  }
+
+  .inline-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.8) contrast(1.1);
+  }
+
+  /* Second inline image — round crop */
+  .inline-img-round {
+    border-radius: 50%;
+  }
+
+  /* Muted text spans */
+  .text-muted { color: #555; }
+
+  .subhead {
+    font-size: clamp(14px, 2vw, 17px);
+    color: #666;
+    line-height: 1.7;
+    max-width: 560px;
+    margin-bottom: 36px;
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    padding: 13px 28px;
+    background: #f0c040;
+    color: #000;
+    border: none;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: #ffd060; }
+
+  .btn-ghost {
+    padding: 13px 28px;
+    background: transparent;
+    color: #888;
+    border: 1px solid #2a2a2a;
+    border-radius: 40px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: #444; color: #fff; }
+
+  /* Image credit */
+  .credit {
+    margin-top: 48px;
+    font-size: 11px;
+    color: #333;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="eyebrow">Creative Studio — Est. 2019</span>
+
+  <h1 class="display-heading">
+    <span>We build</span>
+    <span class="inline-img-wrap">
+      <!-- Using a reliable placeholder image service -->
+      <img
+        src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=240&h=192&fit=crop&crop=center"
+        alt="Design work"
+        onerror="this.style.display='none'; this.parentElement.style.background='#1a1a1a';"
+      >
+    </span>
+    <span>digital</span>
+    <span class="text-muted">experiences</span>
+  </h1>
+
+  <h2 class="display-heading" style="font-size: clamp(24px,4vw,52px); margin-bottom: 40px;">
+    <span class="text-muted">for brands</span>
+    <span>that</span>
+    <span class="inline-img-wrap inline-img-round">
+      <img
+        src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=192&h=192&fit=crop&crop=faces"
+        alt="Team"
+        onerror="this.style.display='none'; this.parentElement.style.background='#1a1a1a';"
+      >
+    </span>
+    <span>dare</span>
+    <span>to stand out.</span>
+  </h2>
+
+  <p class="subhead">
+    We partner with founders and teams to craft interfaces that convert,
+    stories that resonate, and systems that scale.
+  </p>
+
+  <div class="cta-row">
+    <button class="btn-primary">View our work</button>
+    <button class="btn-ghost">Get in touch →</button>
+  </div>
+
+  <p class="credit">Images: Unsplash (replaced with colored block if offline)</p>
+</div>
+
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     6. INFINITE MARQUEE
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'infinite-marquee',
+    name: 'Infinite Marquee / Scrolling Text',
+    category: 'Text Effects',
+    tags: ['marquee', 'loop', 'footer', 'text', 'animation'],
+    description: 'A strip of text that scrolls horizontally in a seamless infinite loop. Pure CSS animation — no JavaScript. Content is duplicated to eliminate the gap at loop seam.',
+    whenToUse: 'Works great as a section divider, brand showcase strip, client logo row, or announcement banner. Add multiple rows scrolling in opposite directions for a visual punch.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Infinite Marquee</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0f0f0f;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  .page-header {
+    text-align: center;
+    padding: 60px 40px 40px;
+  }
+
+  .page-header h1 {
+    font-size: clamp(24px, 4vw, 42px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .page-header p { color: #555; font-size: 14px; }
+
+  /* ─── Marquee container ─── */
+  .marquee-section {
+    padding: 12px 0;
+    overflow: hidden;
+    /* Fade edges with mask */
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  }
+
+  /* Rows with different styling */
+  .marquee-section--gold { background: #f0c040; color: #000; }
+  .marquee-section--dark { background: #111; border-top: 1px solid #1e1e1e; border-bottom: 1px solid #1e1e1e; }
+  .marquee-section--outline { background: transparent; }
+
+  /* ─── The scrolling track ─── */
+  .marquee-track {
+    display: inline-flex;
+    white-space: nowrap;
+    /* animation-play-state is set per-instance */
+    will-change: transform;
+  }
+
+  /* Pause on hover */
+  .marquee-section:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* Row 1: forward */
+  .marquee-track--forward {
+    animation: marquee-forward 22s linear infinite;
+  }
+
+  /* Row 2: backward (reverse) */
+  .marquee-track--backward {
+    animation: marquee-backward 18s linear infinite;
+  }
+
+  /* Row 3: slower */
+  .marquee-track--slow {
+    animation: marquee-forward 35s linear infinite;
+  }
+
+  /* ─── Keyframes ───
+     We translate by -50% because we duplicate the content,
+     so the second copy seamlessly picks up where the first ended.
+  ─── */
+  @keyframes marquee-forward {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-backward {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+
+  /* ─── Individual items ─── */
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 10px 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .marquee-section--gold .marquee-item { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* Separator between items */
+  .marquee-item::after {
+    content: '✦';
+    margin: 0 20px;
+    opacity: 0.4;
+    font-size: 10px;
+  }
+
+  .marquee-section--gold .marquee-item::after { content: '◆'; }
+
+  .marquee-section--outline .marquee-item {
+    font-size: clamp(28px, 5vw, 56px);
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1px #2a2a2a;
+    letter-spacing: -1px;
+    padding: 8px 0;
+    transition: -webkit-text-stroke 0.3s;
+  }
+
+  .marquee-section--outline .marquee-item::after {
+    content: '○';
+    font-size: 0.4em;
+    color: #2a2a2a;
+    -webkit-text-stroke: 0;
+    margin: 0 24px;
+    opacity: 1;
+  }
+
+  .marquee-section--outline:hover .marquee-item {
+    -webkit-text-stroke-color: #444;
+  }
+
+  .spacer { height: 1px; background: #1a1a1a; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Infinite Marquee</h1>
+  <p>Pure CSS. Hover to pause. Three rows — two directions, three speeds.</p>
+</div>
+
+<!-- Row 1: Gold background, forward -->
+<div class="marquee-section marquee-section--gold">
+  <div class="marquee-track marquee-track--forward">
+    <!-- Content duplicated for seamless loop -->
+    <span class="marquee-item">Brand Strategy</span>
+    <span class="marquee-item">UX Design</span>
+    <span class="marquee-item">Motion Design</span>
+    <span class="marquee-item">Web Development</span>
+    <span class="marquee-item">Creative Direction</span>
+    <span class="marquee-item">Product Design</span>
+    <span class="marquee-item">Visual Identity</span>
+    <span class="marquee-item">Brand Strategy</span>
+    <span class="marquee-item">UX Design</span>
+    <span class="marquee-item">Motion Design</span>
+    <span class="marquee-item">Web Development</span>
+    <span class="marquee-item">Creative Direction</span>
+    <span class="marquee-item">Product Design</span>
+    <span class="marquee-item">Visual Identity</span>
+  </div>
+</div>
+
+<!-- Row 2: Dark background, reverse direction -->
+<div class="marquee-section marquee-section--dark">
+  <div class="marquee-track marquee-track--backward">
+    <span class="marquee-item">Acme Corp</span>
+    <span class="marquee-item">Stellar Ventures</span>
+    <span class="marquee-item">Nova Systems</span>
+    <span class="marquee-item">Meridian Health</span>
+    <span class="marquee-item">Atlas Finance</span>
+    <span class="marquee-item">Orbit Media</span>
+    <span class="marquee-item">Prism Studio</span>
+    <span class="marquee-item">Apex Digital</span>
+    <span class="marquee-item">Acme Corp</span>
+    <span class="marquee-item">Stellar Ventures</span>
+    <span class="marquee-item">Nova Systems</span>
+    <span class="marquee-item">Meridian Health</span>
+    <span class="marquee-item">Atlas Finance</span>
+    <span class="marquee-item">Orbit Media</span>
+    <span class="marquee-item">Prism Studio</span>
+    <span class="marquee-item">Apex Digital</span>
+  </div>
+</div>
+
+<!-- Row 3: Outline text, slow -->
+<div class="marquee-section marquee-section--outline">
+  <div class="marquee-track marquee-track--slow">
+    <span class="marquee-item">DESIGN</span>
+    <span class="marquee-item">BUILD</span>
+    <span class="marquee-item">LAUNCH</span>
+    <span class="marquee-item">GROW</span>
+    <span class="marquee-item">ITERATE</span>
+    <span class="marquee-item">DESIGN</span>
+    <span class="marquee-item">BUILD</span>
+    <span class="marquee-item">LAUNCH</span>
+    <span class="marquee-item">GROW</span>
+    <span class="marquee-item">ITERATE</span>
+  </div>
+</div>
+
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     7. HAMBURGER MENU + FULLSCREEN OVERLAY
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'hamburger-nav',
+    name: 'Hamburger Menu + Fullscreen Overlay',
+    category: 'Navigation',
+    tags: ['nav', 'menu', 'hamburger', 'overlay', 'toggle'],
+    description: 'A hamburger icon that toggles a fullscreen navigation overlay. The icon morphs from 3 lines to an X on open. Nav links stagger in. Body scroll is locked when open.',
+    whenToUse: 'Essential for mobile-first sites, portfolios, or any project where a minimal nav bar hides a full navigation architecture. The fullscreen treatment creates a focused, distraction-free menu experience.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hamburger Nav</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0f0f0f;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Lock scroll when menu open */
+  body.menu-open { overflow: hidden; }
+
+  /* ─── Top Navigation Bar ─── */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Glassmorphism when content is below */
+    background: rgba(15,15,15,0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .logo {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #f0c040;
+    letter-spacing: 2px;
+    z-index: 101;
+    position: relative;
+  }
+
+  /* ─── Hamburger Button ─── */
+  .hamburger {
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: 1.5px solid #2a2a2a;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    z-index: 101;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .hamburger:hover { border-color: #444; }
+
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: #fff;
+    border-radius: 2px;
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
+                opacity 0.2s ease,
+                width 0.3s ease;
+    transform-origin: center;
+  }
+
+  /* Morphing to X */
+  body.menu-open .hamburger span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+  body.menu-open .hamburger span:nth-child(2) {
+    opacity: 0;
+    width: 0;
+  }
+  body.menu-open .hamburger span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  /* ─── Fullscreen Overlay ─── */
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: #111;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  body.menu-open .nav-overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ─── Nav Links ─── */
+  .nav-links {
+    list-style: none;
+    text-align: left;
+    padding: 0 60px;
+  }
+
+  .nav-links li {
+    overflow: hidden; /* Clip the sliding text */
+    padding: 2px 0;
+  }
+
+  .nav-links a {
+    display: block;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    transform: translateY(110%);
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1),
+                color 0.2s ease;
+    /* Staggered delays applied per link */
+  }
+
+  /* Stagger each nav link when opening */
+  body.menu-open .nav-links a {
+    transform: translateY(0);
+  }
+
+  .nav-links li:nth-child(1) a { transition-delay: 0.05s; }
+  .nav-links li:nth-child(2) a { transition-delay: 0.10s; }
+  .nav-links li:nth-child(3) a { transition-delay: 0.15s; }
+  .nav-links li:nth-child(4) a { transition-delay: 0.20s; }
+  .nav-links li:nth-child(5) a { transition-delay: 0.25s; }
+
+  /* Closing: no stagger delay */
+  body:not(.menu-open) .nav-links a { transition-delay: 0s !important; }
+
+  .nav-links a:hover { color: #f0c040; }
+
+  /* ─── Side details in overlay ─── */
+  .overlay-footer {
+    position: absolute;
+    bottom: 40px;
+    left: 60px;
+    right: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s;
+  }
+
+  body.menu-open .overlay-footer {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+
+  .overlay-footer span { font-size: 12px; color: #666; }
+
+  /* ─── Page content ─── */
+  .page-content {
+    padding: 120px 40px 60px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .page-content h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+
+  .page-content p {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Fixed Navbar -->
+<nav class="navbar">
+  <div class="logo">STUDIO</div>
+  <button class="hamburger" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Fullscreen Nav Overlay -->
+<div class="nav-overlay" id="navOverlay" role="dialog" aria-modal="true">
+  <ul class="nav-links">
+    <li><a href="#" onclick="closeMenu()">Work</a></li>
+    <li><a href="#" onclick="closeMenu()">About</a></li>
+    <li><a href="#" onclick="closeMenu()">Services</a></li>
+    <li><a href="#" onclick="closeMenu()">Journal</a></li>
+    <li><a href="#" onclick="closeMenu()">Contact</a></li>
+  </ul>
+  <div class="overlay-footer">
+    <span>© 2026 Studio</span>
+    <span>hello@studio.com</span>
+  </div>
+</div>
+
+<!-- Page Content -->
+<div class="page-content">
+  <h1>Click the hamburger menu ↗</h1>
+  <p>The fullscreen overlay animates in with an opacity fade. Each nav link slides up from behind a clip mask with a staggered delay — creating a cascade effect.</p>
+  <p>The hamburger icon morphs cleanly into an X using CSS transforms. Body scroll is locked while the menu is open.</p>
+  <p>Press <strong>ESC</strong> or click any link to close.</p>
+</div>
+
+<script>
+  const toggle = document.getElementById('menuToggle');
+
+  function openMenu() {
+    document.body.classList.add('menu-open');
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMenu() {
+    document.body.classList.remove('menu-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle.addEventListener('click', () => {
+    if (document.body.classList.contains('menu-open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Close on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+<\/script>
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     8. TEXT STAGGER REVEAL (WORD BY WORD)
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'text-stagger',
+    name: 'Text Stagger Reveal (Word by Word)',
+    category: 'Text Effects',
+    tags: ['text', 'stagger', 'reveal', 'words', 'animation'],
+    description: 'A headline where each word slides up from below a clip mask, one by one. Creates a premium editorial entrance. Triggered by IntersectionObserver — fires once on first scroll into view.',
+    whenToUse: 'Use for hero headlines, section titles, or anywhere you want an "Apple keynote" level text entrance. Works best with short, punchy copy (3–10 words per line).',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Text Stagger Reveal</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* First section: auto-triggers on load */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  /* Second section: triggers on scroll into view */
+  .second {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px clamp(24px, 8vw, 120px);
+  }
+
+  /* ─── Stagger target (add class js-stagger to any h1/h2) ─── */
+  .js-stagger {
+    /* Will be restructured by JS into word spans */
+    font-size: clamp(36px, 7vw, 96px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.25em;
+    justify-content: center;
+  }
+
+  .second .js-stagger {
+    justify-content: flex-start;
+  }
+
+  /* ─── Word wrapper: clips the inner span ─── */
+  .word-wrapper {
+    display: inline-block;
+    overflow: hidden;
+    /* Slight extra height prevents clipping descenders */
+    padding-bottom: 0.08em;
+    vertical-align: bottom;
+    line-height: 1.1;
+  }
+
+  /* ─── The word span that slides up ─── */
+  .word-inner {
+    display: inline-block;
+    transform: translateY(110%);
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Delay is set dynamically via style attribute */
+  }
+
+  /* When the parent heading is .revealed, all words animate in */
+  .js-stagger.revealed .word-inner {
+    transform: translateY(0);
+  }
+
+  /* ─── Colored words ─── */
+  .word-accent { color: #f0c040; }
+  .word-muted  { color: #444; }
+
+  .sub-text {
+    margin-top: 28px;
+    font-size: clamp(14px, 2vw, 18px);
+    color: #555;
+    max-width: 520px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .second .sub-text {
+    text-align: left;
+    max-width: 480px;
+  }
+
+  .scroll-hint {
+    margin-top: 60px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #333;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  /* Eyebrow label */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #f0c040;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .eyebrow.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HERO: auto-triggers after short delay ─── -->
+<section class="hero">
+  <span class="eyebrow" id="eyebrow1">Motion Design</span>
+  <h1 class="js-stagger" id="heading1" data-text="Words that arrive on purpose.">
+    Words that arrive on purpose.
+  </h1>
+  <p class="sub-text">Each word slides up from behind a clip mask. Triggered by IntersectionObserver — scroll down for another example.</p>
+  <div class="scroll-hint">↓ scroll for more</div>
+</section>
+
+<!-- ─── SECOND SECTION: triggers on scroll ─── -->
+<section class="second">
+  <span class="eyebrow" id="eyebrow2">Case Study</span>
+  <h2 class="js-stagger" id="heading2" data-text="We redesigned a $2B healthcare platform.">
+    We redesigned a $2B healthcare platform.
+  </h2>
+  <p class="sub-text">A three-month engagement that reduced patient drop-off by 34% and cut average task time in half.</p>
+</section>
+
+<div style="height: 40px; background: #0a0a0a;"></div>
+
+<script>
+  // ─── Core function: split heading into animated word spans ───
+  function prepareHeading(el) {
+    const text = el.getAttribute('data-text') || el.textContent.trim();
+    const words = text.split(/\s+/);
+
+    // Clear existing content
+    el.innerHTML = '';
+
+    words.forEach((word, i) => {
+      // Outer wrapper clips the inner span
+      const wrapper = document.createElement('span');
+      wrapper.className = 'word-wrapper';
+
+      // Inner span that slides up
+      const inner = document.createElement('span');
+      inner.className = 'word-inner';
+      inner.textContent = word;
+      // Stagger: each word delays by 0.08s from the previous
+      inner.style.transitionDelay = (i * 0.08) + 's';
+
+      wrapper.appendChild(inner);
+      el.appendChild(wrapper);
+    });
+  }
+
+  // ─── Trigger reveal on a heading ───
+  function revealHeading(el, eyebrowEl) {
+    el.classList.add('revealed');
+    if (eyebrowEl) {
+      eyebrowEl.classList.add('revealed');
+    }
+  }
+
+  // ─── Initialize all stagger headings ───
+  const headings = document.querySelectorAll('.js-stagger');
+  headings.forEach(h => prepareHeading(h));
+
+  // ─── First heading: auto-trigger after 200ms ───
+  setTimeout(() => {
+    revealHeading(
+      document.getElementById('heading1'),
+      document.getElementById('eyebrow1')
+    );
+  }, 200);
+
+  // ─── Second heading: trigger on scroll via IntersectionObserver ───
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Small delay after entering viewport
+        setTimeout(() => {
+          revealHeading(
+            document.getElementById('heading2'),
+            document.getElementById('eyebrow2')
+          );
+        }, 150);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const h2 = document.getElementById('heading2');
+  if (h2) observer.observe(h2);
+<\/script>
+</body>
+</html>`
+  },
+
+  /* ─────────────────────────────────────────────────────────
+     9. IMAGE PARALLAX ON SCROLL
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'parallax-image',
+    name: 'Image Parallax on Scroll',
+    category: 'Scroll Animations',
+    tags: ['parallax', 'scroll', 'image', 'depth', 'hero'],
+    description: 'A background image moves at a slower speed than the page scroll, creating a convincing depth/parallax effect. Uses requestAnimationFrame for silky smooth performance.',
+    whenToUse: 'Ideal for hero sections, "about us" photography strips, or any place you want to add depth to a static image. Works best with landscape photos that have visual interest throughout the full height.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Image Parallax</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #0f0f0f;
+    color: #fff;
+    font-family: system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── Top section (above parallax) ─── */
+  .intro-section {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .intro-section h1 {
+    font-size: clamp(24px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .intro-section p { margin-top: 12px; color: #666; }
+
+  /* ─── Parallax section ─── */
+  .parallax-section {
+    position: relative;
+    height: 70vh;
+    overflow: hidden; /* Clip the oversized image */
+  }
+
+  /* ─── The parallax image ───
+     Taller than its container (130%) and starts offset (-15%)
+     so it has room to travel upward without revealing empty space.
+  ─── */
+  .parallax-img {
+    position: absolute;
+    top: -15%;
+    left: 0;
+    width: 100%;
+    height: 130%;
+    object-fit: cover;
+    will-change: transform;
+    /* Start at no offset; JS drives the transform */
+    transform: translateY(0);
+  }
+
+  /* Dark overlay on the image */
+  .parallax-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(15,15,15,0.4) 0%,
+      rgba(15,15,15,0.1) 50%,
+      rgba(15,15,15,0.7) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Caption over the image */
+  .parallax-caption {
+    position: absolute;
+    bottom: 48px;
+    left: 48px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .parallax-caption h2 {
+    font-size: clamp(22px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+  }
+
+  .parallax-caption p {
+    margin-top: 6px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+  }
+
+  /* ─── Content section below the parallax ─── */
+  .content-section {
+    padding: 80px 48px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .content-section h3 {
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .content-section p {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  /* Second parallax section */
+  .parallax-section--small { height: 50vh; }
+
+  .parallax-caption--center {
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+    bottom: 50%;
+    transform: translate(-50%, 50%);
+  }
+</style>
+</head>
+<body>
+
+<div class="intro-section">
+  <div>
+    <h1>Scroll to see the parallax</h1>
+    <p>↓ The image moves slower than the page, creating natural depth</p>
+  </div>
+</div>
+
+<!-- ─── PARALLAX SECTION 1 ─── -->
+<div class="parallax-section" id="parallax1">
+  <img
+    class="parallax-img"
+    id="parallaxImg1"
+    src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=1200&fit=crop&q=80"
+    alt="Mountain landscape"
+    onerror="this.src=''; this.style.background='linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)';"
+  >
+  <div class="parallax-caption">
+    <h2>The Summit</h2>
+    <p>4,810m above sea level</p>
+  </div>
+</div>
+
+<div class="content-section">
+  <h3>How the parallax works</h3>
+  <p>The image is sized at 130% of its container height and offset by -15% at the start. As you scroll, JavaScript reads the scroll position and applies a <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#f0c040;font-size:13px;">translateY</code> at 30% of the scroll speed.</p>
+  <p>The net result is the image moves 0.3px for every 1px of scroll — creating the illusion of depth. <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#f0c040;font-size:13px;">requestAnimationFrame</code> keeps it buttery smooth.</p>
+</div>
+
+<!-- ─── PARALLAX SECTION 2 ─── -->
+<div class="parallax-section parallax-section--small" id="parallax2">
+  <img
+    class="parallax-img"
+    id="parallaxImg2"
+    src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600&h=900&fit=crop&q=80"
+    alt="City skyline"
+    onerror="this.src=''; this.style.background='linear-gradient(135deg, #0d0d0d, #1a1a2e, #2d1b69)';"
+  >
+  <div class="parallax-caption parallax-caption--center">
+    <h2>The City</h2>
+    <p>A different parallax strip</p>
+  </div>
+</div>
+
+<div class="content-section">
+  <h3>Multiple parallax sections</h3>
+  <p>Each section runs independently — each image has its own scroll calculation based on its position in the page. You can stack as many as needed.</p>
+  <p>For best results: use high-resolution landscape photos (wider than tall), and ensure your container is no more than ~70vh tall for the effect to stay within bounds.</p>
+</div>
+
+<div style="height: 60px;"></div>
+
+<script>
+  // Collect all parallax image + section pairs
+  const parallaxItems = [
+    {
+      section: document.getElementById('parallax1'),
+      img: document.getElementById('parallaxImg1')
+    },
+    {
+      section: document.getElementById('parallax2'),
+      img: document.getElementById('parallaxImg2')
+    }
+  ];
+
+  let ticking = false;
+
+  function updateParallax() {
+    parallaxItems.forEach(({ section, img }) => {
+      if (!section || !img) return;
+
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // Only compute when section is in/near view
+      if (rect.bottom < 0 || rect.top > viewportHeight) return;
+
+      // How far the section center is from the viewport center
+      const sectionCenter = rect.top + rect.height / 2;
+      const offset = (sectionCenter - viewportHeight / 2);
+
+      // Parallax speed: 0.3 = image moves at 30% of scroll speed
+      const parallaxOffset = offset * 0.3;
+
+      // Apply the transform — translateY moves the image relative to its starting -15% top
+      img.style.transform = \`translateY(\${parallaxOffset}px)\`;
+    });
+
+    ticking = false;
+  }
+
+  // Use RAF to throttle scroll handler
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Initialize on load
+  updateParallax();
+<\/script>
+</body>
+</html>`
+  }
+
+,
+
+  /* ─────────────────────────────────────────────────────────
+     10. SCROLL-DRIVEN CARD FAN / DECK SPREAD
+     ───────────────────────────────────────────────────────── */
+  {
+    id: 'card-fan',
+    name: 'Scroll-Driven Card Fan',
+    category: 'Layout & Stacking',
+    tags: ['scroll', 'cards', 'fan', 'deck', 'lerp', 'canvas'],
+    description: 'Nine service cards start stacked in a spread-out row and animate into a tight overlapping deck as you scroll. Each card features a unique Mughal-inspired canvas illustration. Driven by scroll progress lerp — no libraries.',
+    whenToUse: 'Perfect for "Our Services" sections, portfolio showcases, or any place you want to display multiple items with a cinematic reveal. The canvas art gives each card a unique identity without images.',
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Services — Food Mantraa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: #F7F1E8;
+    color: #2C1810;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .spacer { height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .spacer p { font-size: 1.1rem; color: #9E8A76; letter-spacing: 0.15em; font-family: 'Cormorant Garamond', serif; text-transform: uppercase; }
+
+  .scroll-section {
+    height: 3200px;
+    position: relative;
+  }
+
+  .sticky-wrap {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 60px;
+    background: #FBF6EF;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(139,28,38,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(58,87,50,0.03) 0%, transparent 50%);
+  }
+
+  .header {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 48px;
+    flex-shrink: 0;
+  }
+
+  .header h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(30px, 3.5vw, 52px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #2C1810;
+    font-style: italic;
+  }
+
+  .cards-track {
+    position: relative;
+    height: 420px;
+    flex-shrink: 0;
+  }
+
+  .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 233px;
+    height: 400px;
+    border-radius: 14px;
+    will-change: transform;
+    transition: transform 0.06s linear;
+    cursor: default;
+    box-shadow: 0 2px 12px rgba(44,24,16,0.08), 0 0 0 1px rgba(44,24,16,0.04);
+  }
+
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    padding: 22px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-inner::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(191,163,112,0.25);
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .card-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 400;
+    opacity: 0.5;
+    font-style: italic;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card-rule {
+    border: none;
+    height: 1px;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-illustration {
+    width: 180px;
+    height: 180px;
+    border-radius: 12px;
+    margin: auto auto 0;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+
+  .card[data-theme="light"] .card-title,
+  .card[data-theme="light"] .card-number,
+  .card[data-theme="light"] .card-desc { color: #2C1810; }
+  .card[data-theme="light"] .card-rule { background: rgba(44,24,16,0.12); }
+
+  .card[data-theme="dark"] .card-title,
+  .card[data-theme="dark"] .card-number,
+  .card[data-theme="dark"] .card-desc { color: #FBF6EF; }
+  .card[data-theme="dark"] .card-rule { background: rgba(251,246,239,0.2); }
+
+  .card[data-theme="cream"] .card-title,
+  .card[data-theme="cream"] .card-number,
+  .card[data-theme="cream"] .card-desc { color: #FAF3E6; }
+  .card[data-theme="cream"] .card-rule { background: rgba(250,243,230,0.2); }
+
+  .bottom-spacer { height: 100vh; background: #F7F1E8; }
+
+  .cta {
+    margin-top: 36px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 36px;
+    background: #8B1C26;
+    color: #FAF3E6;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 500;
+    font-style: italic;
+    text-decoration: none;
+    border-radius: 50px;
+    letter-spacing: 0.02em;
+    transition: transform 0.25s, box-shadow 0.25s;
+    box-shadow: 0 2px 8px rgba(139,28,38,0.15);
+  }
+  .cta a:hover {
+    background: linear-gradient(135deg, #8B1C26, #BFA370, #3A5732, #BFA370, #8B1C26);
+    background-size: 300% 300%;
+    animation: gradientShift 3s ease infinite;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(139,28,38,0.25);
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .cta a svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s;
+  }
+  .cta a:hover svg {
+    transform: translateX(3px);
+  }
+</style>
+</head>
+<body>
+
+<div class="spacer"><p>↓ Scroll down ↓</p></div>
+
+<div class="scroll-section" id="scrollSection">
+  <div class="sticky-wrap">
+    <div class="header">
+      <h2>Our Services</h2>
+    </div>
+    <div class="cards-track" id="cardsTrack"></div>
+    <div class="cta">
+      <a href="#">View all Services <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-spacer"></div>
+
+<script>
+// ── Mughal-inspired canvas pattern helpers ──
+function drawLotus(ctx, cx, cy, r, color, petalCount) {
+  petalCount = petalCount || 8;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.fillStyle = color;
+  for (let i = 0; i < petalCount; i++) {
+    ctx.save();
+    ctx.rotate((Math.PI * 2 / petalCount) * i);
+    ctx.beginPath();
+    ctx.ellipse(0, -r * 0.45, r * 0.22, r * 0.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.15, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawArch(ctx, cx, cy, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(cx - w/2, cy + h/2);
+  ctx.lineTo(cx - w/2, cy - h*0.1);
+  ctx.quadraticCurveTo(cx - w/2, cy - h/2, cx, cy - h/2);
+  ctx.quadraticCurveTo(cx + w/2, cy - h/2, cx + w/2, cy - h*0.1);
+  ctx.lineTo(cx + w/2, cy + h/2);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawScallop(ctx, cx, cy, r, count, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 / count) * i;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    ctx.beginPath();
+    ctx.arc(x, y, r * 0.35, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
+function drawVines(ctx, s, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  for (let x = 0; x < s; x += 2) {
+    const y = s * 0.5 + Math.sin(x * 0.04) * s * 0.15;
+    x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.fillStyle = color;
+  for (let i = 0; i < 8; i++) {
+    const x = s * 0.1 + i * s * 0.11;
+    const y = s * 0.5 + Math.sin(x * 0.04) * s * 0.15;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(Math.sin(i) * 0.5);
+    ctx.beginPath();
+    ctx.ellipse(0, -6, 3, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+const cardsData = [
+  {
+    title: "Corporate Catering", num: "01",
+    desc: "Elevate your corporate events with curated menus, seamless service and flavors that leave a lasting impression.",
+    bg: "#FAF3E6", theme: "light",
+    illBg: "#EDE4D3",
+    illustration: (ctx, s) => {
+      ctx.strokeStyle = "rgba(139,28,38,0.2)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+          const x = s*0.12 + i * s*0.19;
+          const y = s*0.12 + j * s*0.19;
+          drawArch(ctx, x, y, s*0.14, s*0.16, "rgba(139,28,38,0.06)");
+          ctx.strokeStyle = "rgba(191,163,112,0.35)";
+          ctx.beginPath(); ctx.arc(x, y + s*0.02, s*0.03, 0, Math.PI*2); ctx.stroke();
+        }
+      }
+      drawLotus(ctx, s*0.5, s*0.5, s*0.2, "rgba(139,28,38,0.12)", 12);
+      drawScallop(ctx, s*0.5, s*0.5, s*0.32, 12, "rgba(191,163,112,0.3)");
+    }
+  },
+  {
+    title: "Parties & Events", num: "02",
+    desc: "From intimate gatherings to grand celebrations, we craft unforgettable culinary experiences for every occasion.",
+    bg: "#8B1C26", theme: "cream",
+    illBg: "#6E1520",
+    illustration: (ctx, s) => {
+      drawLotus(ctx, s*0.5, s*0.5, s*0.35, "rgba(250,243,230,0.12)", 16);
+      drawLotus(ctx, s*0.5, s*0.5, s*0.22, "rgba(191,163,112,0.2)", 10);
+      drawScallop(ctx, s*0.5, s*0.5, s*0.4, 16, "rgba(250,243,230,0.15)");
+      drawScallop(ctx, s*0.5, s*0.5, s*0.25, 8, "rgba(191,163,112,0.25)");
+      const g = ctx.createRadialGradient(s*0.5, s*0.5, 0, s*0.5, s*0.5, s*0.08);
+      g.addColorStop(0, "rgba(191,163,112,0.6)");
+      g.addColorStop(1, "rgba(191,163,112,0.05)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(s*0.5, s*0.5, s*0.08, 0, Math.PI*2); ctx.fill();
+    }
+  },
+  {
+    title: "Pre-Weddings & Weddings", num: "03",
+    desc: "Bespoke menus and flawless execution to make your most special day truly magical.",
+    bg: "#C9948A", theme: "light",
+    illBg: "#B8847A",
+    illustration: (ctx, s) => {
+      drawArch(ctx, s*0.5, s*0.55, s*0.7, s*0.85, "rgba(250,243,230,0.12)");
+      drawArch(ctx, s*0.5, s*0.55, s*0.55, s*0.7, "rgba(250,243,230,0.1)");
+      drawArch(ctx, s*0.5, s*0.55, s*0.38, s*0.55, "rgba(250,243,230,0.08)");
+      drawLotus(ctx, s*0.5, s*0.35, s*0.14, "rgba(250,243,230,0.2)", 8);
+      drawLotus(ctx, s*0.25, s*0.7, s*0.08, "rgba(139,28,38,0.12)", 6);
+      drawLotus(ctx, s*0.75, s*0.7, s*0.08, "rgba(139,28,38,0.12)", 6);
+      drawScallop(ctx, s*0.5, s*0.35, s*0.2, 6, "rgba(191,163,112,0.3)");
+    }
+  },
+  {
+    title: "Hi Tea", num: "04",
+    desc: "A refined selection of teas, finger foods and sweet bites for elegant afternoon affairs.",
+    bg: "#3A5732", theme: "cream",
+    illBg: "#2E4628",
+    illustration: (ctx, s) => {
+      drawVines(ctx, s, "rgba(250,243,230,0.15)");
+      const spots = [[0.2,0.3],[0.45,0.25],[0.7,0.4],[0.3,0.65],[0.6,0.7],[0.85,0.55],[0.15,0.8]];
+      spots.forEach(([px,py]) => {
+        drawLotus(ctx, s*px, s*py, s*0.06, "rgba(250,243,230,0.13)", 6);
+      });
+      drawLotus(ctx, s*0.5, s*0.5, s*0.18, "rgba(191,163,112,0.15)", 10);
+      drawScallop(ctx, s*0.5, s*0.5, s*0.28, 10, "rgba(250,243,230,0.1)");
+    }
+  },
+  {
+    title: "Live Counters", num: "05",
+    desc: "Interactive cooking stations where chefs prepare dishes live, adding theater and freshness to your event.",
+    bg: "#BFA370", theme: "light",
+    illBg: "#A8904F",
+    illustration: (ctx, s) => {
+      for (let i = 0; i < 6; i++) {
+        const scale = 1 - i * 0.13;
+        drawArch(ctx, s*0.5, s*0.55 - i*4, s*0.65*scale, s*0.75*scale, "rgba(44,24,16," + (0.04 + i*0.015) + ")");
+      }
+      ctx.strokeStyle = "rgba(44,24,16,0.1)";
+      ctx.lineWidth = 1.5;
+      for (let k = 0; k < 3; k++) {
+        ctx.beginPath();
+        const ox = s*0.35 + k * s*0.15;
+        for (let y = s*0.5; y > s*0.1; y -= 2) {
+          const x = ox + Math.sin((s*0.5-y)*0.06 + k*2) * s*0.06;
+          y === s*0.5 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      drawLotus(ctx, s*0.5, s*0.7, s*0.1, "rgba(44,24,16,0.08)", 8);
+    }
+  },
+  {
+    title: "Graze Mantraa", num: "06",
+    desc: "Stunning grazing tables and platters loaded with artisanal cheeses, charcuterie and seasonal delights.",
+    bg: "#F5EDE0", theme: "light",
+    illBg: "#E8DCC8",
+    illustration: (ctx, s) => {
+      drawScallop(ctx, s*0.5, s*0.5, s*0.38, 14, "rgba(139,28,38,0.15)");
+      drawScallop(ctx, s*0.5, s*0.5, s*0.28, 10, "rgba(191,163,112,0.3)");
+      drawScallop(ctx, s*0.5, s*0.5, s*0.18, 8, "rgba(139,28,38,0.12)");
+      drawLotus(ctx, s*0.5, s*0.5, s*0.12, "rgba(191,163,112,0.25)", 8);
+      drawLotus(ctx, s*0.12, s*0.12, s*0.07, "rgba(139,28,38,0.08)", 6);
+      drawLotus(ctx, s*0.88, s*0.12, s*0.07, "rgba(139,28,38,0.08)", 6);
+      drawLotus(ctx, s*0.12, s*0.88, s*0.07, "rgba(139,28,38,0.08)", 6);
+      drawLotus(ctx, s*0.88, s*0.88, s*0.07, "rgba(139,28,38,0.08)", 6);
+    }
+  },
+  {
+    title: "Chaska", num: "07",
+    desc: "Traditional Indian sweets, snacks and chaats that bring the vibrant taste of India to your plate.",
+    bg: "#D4553A", theme: "cream",
+    illBg: "#B8432C",
+    illustration: (ctx, s) => {
+      for (let i = 0; i < 7; i++) {
+        for (let j = 0; j < 7; j++) {
+          const x = s*0.08 + i * s*0.14;
+          const y = s*0.08 + j * s*0.14;
+          const offset = j % 2 === 0 ? 0 : s*0.07;
+          drawLotus(ctx, x + offset, y, s*0.04, "rgba(250,243,230,0.12)", 6);
+        }
+      }
+      drawLotus(ctx, s*0.5, s*0.5, s*0.2, "rgba(250,243,230,0.1)", 12);
+      drawScallop(ctx, s*0.5, s*0.5, s*0.3, 8, "rgba(191,163,112,0.2)");
+    }
+  },
+  {
+    title: "Mantraa Freezer Co.", num: "08",
+    desc: "Ready-to-cook frozen snacks and delicacies, crafted with the same love as our fresh kitchen.",
+    bg: "#4A5E6A", theme: "cream",
+    illBg: "#3D4F5A",
+    illustration: (ctx, s) => {
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          const x = s*0.22 + i * s*0.28;
+          const y = s*0.25 + j * s*0.28;
+          drawArch(ctx, x, y, s*0.2, s*0.24, "rgba(250,243,230,0.06)");
+          ctx.fillStyle = "rgba(191,163,112,0.12)";
+          ctx.beginPath(); ctx.arc(x, y + s*0.04, s*0.02, 0, Math.PI*2); ctx.fill();
+        }
+      }
+      drawScallop(ctx, s*0.5, s*0.5, s*0.35, 6, "rgba(250,243,230,0.1)");
+    }
+  },
+  {
+    title: "Daily Home Food", num: "09",
+    desc: "Wholesome, home-style meals delivered to your doorstep every day — comfort food made with care.",
+    bg: "#5C1018", theme: "cream",
+    illBg: "#4A0C14",
+    illustration: (ctx, s) => {
+      drawVines(ctx, s, "rgba(191,163,112,0.15)");
+      ctx.save();
+      ctx.translate(0, -s*0.3);
+      drawVines(ctx, s, "rgba(250,243,230,0.08)");
+      ctx.restore();
+      ctx.save();
+      ctx.translate(0, s*0.3);
+      drawVines(ctx, s, "rgba(250,243,230,0.08)");
+      ctx.restore();
+      drawLotus(ctx, s*0.5, s*0.5, s*0.25, "rgba(250,243,230,0.12)", 12);
+      drawLotus(ctx, s*0.5, s*0.5, s*0.14, "rgba(191,163,112,0.18)", 8);
+      const g = ctx.createRadialGradient(s*0.5, s*0.5, 0, s*0.5, s*0.5, s*0.1);
+      g.addColorStop(0, "rgba(191,163,112,0.25)");
+      g.addColorStop(1, "rgba(191,163,112,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(s*0.5, s*0.5, s*0.1, 0, Math.PI*2); ctx.fill();
+    }
+  }
+];
+
+const track = document.getElementById("cardsTrack");
+const section = document.getElementById("scrollSection");
+const cardEls = [];
+
+// Start: cards are spread across the row (wide spacing)
+// End: cards collapse into a tight overlapping deck
+const startPositions = [60, 310, 560, 810, 1060, 1310, 1560, 1810, 2060];
+const endPositions   = [60,  95, 130, 165,  200,  235,  270,  320,  420];
+
+cardsData.forEach((card, i) => {
+  const el = document.createElement("div");
+  el.className = "card";
+  el.dataset.theme = card.theme;
+  el.style.zIndex = i + 1;
+
+  // Draw each card's illustration onto a canvas, then use as a data URL background
+  const canvas = document.createElement("canvas");
+  const size = 360;
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = card.illBg;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, 20);
+  ctx.fill();
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, 20);
+  ctx.clip();
+  card.illustration(ctx, size);
+  ctx.restore();
+  const illDataUrl = canvas.toDataURL();
+
+  el.innerHTML = \`
+    <div class="card-inner" style="background:\${card.bg}">
+      <div class="card-top">
+        <span class="card-title">\${card.title}</span>
+        <span class="card-number">\${card.num}</span>
+      </div>
+      <hr class="card-rule">
+      <p class="card-desc">\${card.desc}</p>
+      <div class="card-illustration" style="background:url('\${illDataUrl}') center/cover no-repeat"></div>
+    </div>
+  \`;
+
+  track.appendChild(el);
+  cardEls.push(el);
+});
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+// Drive card positions purely from scroll progress — no event listeners needed
+function update() {
+  const rect = section.getBoundingClientRect();
+  const sectionTop = -rect.top;
+  const scrollRange = section.offsetHeight - window.innerHeight;
+  let progress = sectionTop / scrollRange;
+  progress = Math.max(0, Math.min(1, progress));
+
+  cardEls.forEach((el, i) => {
+    const x = lerp(startPositions[i], endPositions[i], progress);
+    el.style.transform = \`translateX(\${x}px)\`;
+  });
+
+  requestAnimationFrame(update);
+}
+
+requestAnimationFrame(update);
+<\/script>
+</body>
+</html>`
+  }
+
+]; // end COMPONENTS array
+
+
+/* ============================================================
+   APP STATE
+   ============================================================ */
+const state = {
+  activeCategory: 'All Components',
+  searchQuery: '',
+  selectedId: null,
+  modalId: null,
+  view: 'grid',
+};
+
+/* ============================================================
+   CATEGORY DEFINITIONS
+   ============================================================ */
+const CATEGORIES = [
+  'All Components',
+  'Scroll Animations',
+  'Cursor & Mouse',
+  'Text Effects',
+  'Layout & Stacking',
+  'Loaders & Transitions',
+  'Navigation',
+];
+
+/* ============================================================
+   FILTERING
+   ============================================================ */
+function getFilteredComponents() {
+  let list = COMPONENTS;
+
+  // Category filter
+  if (state.activeCategory !== 'All Components') {
+    list = list.filter(c => c.category === state.activeCategory);
+  }
+
+  // Search filter — name or tags
+  if (state.searchQuery.trim()) {
+    const q = state.searchQuery.toLowerCase();
+    list = list.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      c.tags.some(t => t.toLowerCase().includes(q)) ||
+      c.category.toLowerCase().includes(q) ||
+      c.description.toLowerCase().includes(q)
+    );
+  }
+
+  return list;
+}
+
+/* ============================================================
+   COUNT BADGES
+   ============================================================ */
+function getCategoryCount(cat) {
+  if (cat === 'All Components') return COMPONENTS.length;
+  return COMPONENTS.filter(c => c.category === cat).length;
+}
+
+/* ============================================================
+   RENDER SIDEBAR NAV
+   ============================================================ */
+function renderNav() {
+  const nav = document.querySelector('.sidebar-nav');
+  nav.innerHTML = '<div class="nav-label">Categories</div>';
+
+  CATEGORIES.forEach(cat => {
+    const count = getCategoryCount(cat);
+    const item = document.createElement('div');
+    item.className = 'nav-item' + (state.activeCategory === cat ? ' active' : '');
+    item.innerHTML = `
+      <span>${cat}</span>
+      <span class="nav-badge">${count}</span>
+    `;
+    item.addEventListener('click', () => {
+      state.activeCategory = cat;
+      state.searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      renderAll();
+    });
+    nav.appendChild(item);
+  });
+}
+
+/* ============================================================
+   RENDER COMPONENT CARDS
+   ============================================================ */
+function renderGrid() {
+  const grid = document.getElementById('componentGrid');
+  const filtered = getFilteredComponents();
+
+  // Update header count
+  const countEl = document.getElementById('resultCount');
+  countEl.textContent = `(${filtered.length})`;
+
+  // Update main title
+  document.getElementById('mainTitle').childNodes[0].textContent =
+    state.activeCategory === 'All Components' && !state.searchQuery
+      ? 'All Components '
+      : (state.searchQuery ? `Search: "${state.searchQuery}" ` : `${state.activeCategory} `);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <h3>No components found</h3>
+        <p>Try a different search term or category</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = '';
+  filtered.forEach(comp => {
+    grid.appendChild(createCard(comp));
+  });
+
+  // Apply view mode class
+  grid.className = 'component-grid' + (state.view === 'list' ? ' list-view' : '');
+}
+
+function createCard(comp) {
+  const card = document.createElement('div');
+  card.className = 'card' + (state.selectedId === comp.id ? ' selected' : '');
+  card.dataset.id = comp.id;
+
+  const tagsHtml = comp.tags.map(t =>
+    `<span class="tag" onclick="filterByTag(event, '${t}')">${t}</span>`
+  ).join('');
+
+  card.innerHTML = `
+    <div class="card-preview">
+      <iframe
+        srcdoc=""
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin"
+        title="${escHtml(comp.name)} preview"
+      ></iframe>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-name">${escHtml(comp.name)}</div>
+        <span class="category-badge">${escHtml(comp.category)}</span>
+      </div>
+      <div class="card-tags">${tagsHtml}</div>
+      <div class="card-actions">
+        <button class="btn btn-preview" onclick="openPreview(event, '${comp.id}')">&#9654; Preview</button>
+        <button class="btn btn-copy" data-copy-id="${comp.id}" onclick="copyCode(event, '${comp.id}')">Copy Code</button>
+      </div>
+    </div>
+  `;
+
+  // Load iframe after creation to avoid blocking render
+  requestAnimationFrame(() => {
+    const iframe = card.querySelector('iframe');
+    if (iframe) iframe.srcdoc = comp.code;
+  });
+
+  // Click card body to open detail panel
+  card.querySelector('.card-body').addEventListener('click', (e) => {
+    // Don't trigger if clicking a button or tag
+    if (e.target.closest('button') || e.target.closest('.tag')) return;
+    selectComponent(comp.id);
+  });
+
+  card.querySelector('.card-preview').addEventListener('click', () => {
+    openPreview(null, comp.id);
+  });
+
+  return card;
+}
+
+/* ============================================================
+   DETAIL PANEL
+   ============================================================ */
+function selectComponent(id) {
+  state.selectedId = id;
+  const comp = COMPONENTS.find(c => c.id === id);
+  if (!comp) return;
+
+  // Update selected card styling
+  document.querySelectorAll('.card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.id === id);
+  });
+
+  // Populate detail panel
+  document.getElementById('detailName').textContent = comp.name;
+  document.getElementById('detailCategory').textContent = comp.category;
+  document.getElementById('detailDesc').textContent = comp.description;
+  document.getElementById('detailWhen').textContent = comp.whenToUse;
+  document.getElementById('detailCode').textContent = comp.code;
+
+  const tagsEl = document.getElementById('detailTags');
+  tagsEl.innerHTML = comp.tags.map(t =>
+    `<span class="tag" onclick="filterByTag(event, '${t}')">${t}</span>`
+  ).join('');
+
+  // Reset copy button
+  const btn = document.getElementById('btnCopyAll');
+  btn.textContent = 'Copy All Code';
+  btn.classList.remove('copied');
+
+  // Open the panel
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+function closeDetail() {
+  state.selectedId = null;
+  document.getElementById('detailPanel').classList.remove('open');
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+}
+
+/* ============================================================
+   PREVIEW MODAL
+   ============================================================ */
+function openPreview(e, id) {
+  if (e) e.stopPropagation();
+  state.modalId = id;
+  const comp = COMPONENTS.find(c => c.id === id);
+  if (!comp) return;
+
+  document.getElementById('modalTitle').textContent = comp.name;
+
+  const wrap = document.getElementById('modalIframeWrap');
+  wrap.innerHTML = `
+    <iframe
+      srcdoc=""
+      sandbox="allow-scripts allow-same-origin"
+      title="${escHtml(comp.name)} fullscreen preview"
+      style="width:100%;height:100%;border:none;display:block;"
+    ></iframe>
+  `;
+
+  requestAnimationFrame(() => {
+    const iframe = wrap.querySelector('iframe');
+    if (iframe) iframe.srcdoc = comp.code;
+  });
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  state.modalId = null;
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+
+  // Clear iframe to stop animations/audio
+  setTimeout(() => {
+    document.getElementById('modalIframeWrap').innerHTML = '';
+  }, 300);
+}
+
+// Close modal on backdrop click
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+// Close modal with ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('modalOverlay').classList.contains('open')) closeModal();
+    else closeDetail();
+  }
+});
+
+/* ============================================================
+   COPY CODE
+   ============================================================ */
+function copyCode(e, id) {
+  if (e) e.stopPropagation();
+  const comp = COMPONENTS.find(c => c.id === id);
+  if (!comp) return;
+
+  navigator.clipboard.writeText(comp.code).then(() => {
+    const btn = e ? e.currentTarget : document.querySelector(`[data-copy-id="${id}"]`);
+    if (btn) {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy Code';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  }).catch(() => {
+    // Fallback for browsers without clipboard API
+    fallbackCopy(comp.code);
+  });
+}
+
+function copyAllCode() {
+  if (!state.selectedId) return;
+  const comp = COMPONENTS.find(c => c.id === state.selectedId);
+  if (!comp) return;
+
+  navigator.clipboard.writeText(comp.code).then(() => {
+    const btn = document.getElementById('btnCopyAll');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy All Code';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => fallbackCopy(comp.code));
+}
+
+function copyModalCode() {
+  if (!state.modalId) return;
+  const comp = COMPONENTS.find(c => c.id === state.modalId);
+  if (!comp) return;
+
+  navigator.clipboard.writeText(comp.code).then(() => {
+    const btn = document.getElementById('modalCopyBtn');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy Code';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => fallbackCopy(comp.code));
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  state.searchQuery = e.target.value;
+  if (state.searchQuery) {
+    state.activeCategory = 'All Components';
+  }
+  renderAll();
+});
+
+/* ============================================================
+   TAG FILTER
+   ============================================================ */
+function filterByTag(e, tag) {
+  e.stopPropagation();
+  state.searchQuery = tag;
+  state.activeCategory = 'All Components';
+  document.getElementById('searchInput').value = tag;
+  renderAll();
+}
+
+/* ============================================================
+   VIEW TOGGLE
+   ============================================================ */
+function setView(v) {
+  state.view = v;
+  document.getElementById('gridViewBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listViewBtn').classList.toggle('active', v === 'list');
+  const grid = document.getElementById('componentGrid');
+  grid.className = 'component-grid' + (v === 'list' ? ' list-view' : '');
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function escHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* ============================================================
+   RENDER ALL
+   ============================================================ */
+function renderAll() {
+  renderNav();
+  renderGrid();
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderAll();
+</script>
+</body>
+</html>
