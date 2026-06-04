@@ -3,6 +3,7 @@ import Marquee from "@/components/Marquee";
 import CTASection from "@/components/CTASection";
 import AuditButton from "@/components/AuditButton";
 import ServiceIcon from "@/components/ServiceIcon";
+import ChannelConstellation from "@/components/ChannelConstellation";
 import StackedTestimonials from "@/components/StackedTestimonials";
 import { home } from "@/lib/content";
 import { services } from "@/lib/services";
@@ -269,10 +270,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
           <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
             <div data-anim="reveal" data-anim-x="left" className="feature-visual" style={{ opacity: 0 }}>
-              <div className="ring fr1" />
-              <div className="ring fr2" />
-              <div className="ring fr3" />
-              <div className="core" />
+              <ChannelConstellation />
               <div className="v-metric">
                 <b>{h.fullService.visual.metric}</b>
                 <small>{h.fullService.visual.metricLabel}</small>

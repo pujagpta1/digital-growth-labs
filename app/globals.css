@@ -433,6 +433,20 @@ body {
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
+.constellation-hub {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hub-pulse 3.2s ease-in-out infinite;
+}
+@keyframes hub-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
 .feature-visual .v-caption {
   position: absolute;
   bottom: 24px;
