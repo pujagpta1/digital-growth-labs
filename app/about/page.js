@@ -12,51 +12,9 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <main>
-      {/* ───────── HERO (red) ───────── */}
-      <section className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-ink text-white">
-        <div className="mx-auto w-full max-w-[1600px] px-5 pt-28 sm:px-8">
-          <Reveal>
-            <p className="label mb-10 text-white/80">{about.hero.label}</p>
-          </Reveal>
-
-          <div className="grid gap-8 sm:grid-cols-2">
-            {about.hero.people.map((p, i) => (
-              <Reveal key={i} delay={i * 0.12}>
-                <div className="relative">
-                  <div className="portrait h-[44vh] w-full rounded-3xl" />
-                  {/* handwritten sticky-note label */}
-                  <span className="absolute -right-2 -top-4 rotate-6 font-hand text-3xl text-white drop-shadow">
-                    {p.note}
-                    <svg
-                      className="mt-1 h-8 w-16"
-                      viewBox="0 0 64 32"
-                      fill="none"
-                      aria-hidden
-                    >
-                      <path
-                        d="M2 4 C 20 28, 44 28, 60 20"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M60 20 L 52 22 M60 20 L 56 13"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ───────── TAGLINE (red) ───────── */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1500px] px-5 py-28 sm:px-8 sm:py-40">
+      {/* ───────── TAGLINE (opens the page) ───────── */}
+      <section data-nav-dark className="bg-ink text-white">
+        <div className="mx-auto max-w-[1500px] px-5 pb-28 pt-36 sm:px-8 sm:pb-40 sm:pt-52">
           <Reveal>
             <h2 className="display-md text-white">
               {about.tagline.pre}{" "}

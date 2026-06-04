@@ -11,6 +11,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState(null);
+  const [darkHero, setDarkHero] = useState(false);
   const pathname = usePathname();
 
   // Background goes frosted past 80px
@@ -20,6 +21,15 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Detect whether the current page opens on a dark section (so the
+  // transparent nav at the top can switch to light text/logo).
+  useEffect(() => {
+    setDarkHero(!!document.querySelector("[data-nav-dark]"));
+  }, [pathname]);
+
+  // Light text/logo only while transparent over a dark hero.
+  const lightText = !scrolled && darkHero;
 
   // Scroll-spy: highlight the nav link whose in-page section is in view
   useEffect(() => {
@@ -61,12 +71,20 @@ export default function Navbar() {
       <nav className="mx-auto flex max-w-[1600px] items-center justify-between px-5 sm:px-8">
         {/* Brand lockup */}
         <Link href="/" data-cursor="link" className="flex items-center gap-3">
-          <Logo className="h-9 w-9 shrink-0 text-ink" />
+          <Logo className={`h-9 w-9 shrink-0 ${lightText ? "text-white" : "text-ink"}`} />
           <span className="leading-none">
-            <b className="block text-base font-extrabold tracking-tightest text-black">
+            <b
+              className={`block text-base font-extrabold tracking-tightest ${
+                lightText ? "text-white" : "text-black"
+              }`}
+            >
               {brand.name}
             </b>
-            <span className="label mt-1 block text-[0.6rem] text-black/45">
+            <span
+              className={`label mt-1 block text-[0.6rem] ${
+                lightText ? "text-white/55" : "text-black/45"
+              }`}
+            >
               {brand.location}
             </span>
           </span>
@@ -82,7 +100,11 @@ export default function Navbar() {
                 href={l.href}
                 data-cursor="link"
                 className={`label relative transition-colors hover:text-[#2D5BFF] ${
-                  activeLink ? "text-[#2D5BFF]" : "text-black/80"
+                  activeLink
+                    ? "text-[#2D5BFF]"
+                    : lightText
+                      ? "text-white/85"
+                      : "text-black/80"
                 }`}
               >
                 {l.label}

@@ -25,8 +25,8 @@ export default function CustomCursor() {
       ty = e.clientY;
     };
     const render = () => {
-      // lerp with 0.1 smoothing (instant if reduced motion)
-      const f = reduce ? 1 : 0.1;
+      // lerp smoothing (instant if reduced motion) — higher = tracks tighter
+      const f = reduce ? 1 : 0.55;
       cx += (tx - cx) * f;
       cy += (ty - cy) * f;
       if (dot.current) {
