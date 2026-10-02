@@ -1,4 +1,5 @@
 import Reveal from "@/components/Reveal";
+import { baseOpenGraph } from "@/lib/site";
 import SectionLabel from "@/components/SectionLabel";
 import CTASection from "@/components/CTASection";
 import { process } from "@/lib/content";
@@ -7,6 +8,8 @@ export const metadata = {
   title: "Our Process — Digital Growth Lab",
   description:
     "How we build compounding growth as a system: map, find the bottleneck, build the funnel, scale what works.",
+  alternates: { canonical: "/process" },
+  openGraph: { ...baseOpenGraph, title: "Our Process — Digital Growth Lab", description: "How we build compounding growth as a system: map, find the bottleneck, build the funnel, scale what works.", url: "/process" },
 };
 
 export default function ProcessPage() {

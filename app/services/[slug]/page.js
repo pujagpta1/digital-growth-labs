@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
+import { baseOpenGraph } from "@/lib/site";
 import AuditButton from "@/components/AuditButton";
 import CTASection from "@/components/CTASection";
 import ServiceIcon from "@/components/ServiceIcon";
@@ -14,9 +15,13 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const service = getService(slug);
   if (!service) return { title: "Service — Digital Growth Labs" };
+  const title = `${service.title} — Digital Growth Labs`;
+  const url = `/services/${service.slug}`;
   return {
-    title: `${service.title} — Digital Growth Labs`,
+    title,
     description: service.intro,
+    alternates: { canonical: url },
+    openGraph: { ...baseOpenGraph, title, description: service.intro, url },
   };
 }
 

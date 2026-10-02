@@ -1,4 +1,5 @@
 import Reveal from "@/components/Reveal";
+import { baseOpenGraph } from "@/lib/site";
 import SectionLabel from "@/components/SectionLabel";
 import CTASection from "@/components/CTASection";
 import { about } from "@/lib/content";
@@ -7,6 +8,8 @@ export const metadata = {
   title: "About — Digital Growth Lab",
   description:
     "A small, blunt growth team that treats your revenue like our own. Who we are, who we work with, and how we think.",
+  alternates: { canonical: "/about" },
+  openGraph: { ...baseOpenGraph, title: "About — Digital Growth Lab", description: "A small, blunt growth team that treats your revenue like our own. Who we are, who we work with, and how we think.", url: "/about" },
 };
 
 export default function AboutPage() {
