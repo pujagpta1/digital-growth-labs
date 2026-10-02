@@ -6,6 +6,7 @@ import AuditButton from "@/components/AuditButton";
 import CTASection from "@/components/CTASection";
 import ServiceIcon from "@/components/ServiceIcon";
 import { services, getService } from "@/lib/services";
+import { JsonLd, serviceSchema } from "@/lib/schema";
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -15,13 +16,14 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const service = getService(slug);
   if (!service) return { title: "Service — Digital Growth Labs" };
-  const title = `${service.title} — Digital Growth Labs`;
+  const title = service.seoTitle || `${service.title} — Digital Growth Labs`;
+  const description = service.metaDescription || service.intro;
   const url = `/services/${service.slug}`;
   return {
     title,
-    description: service.intro,
+    description,
     alternates: { canonical: url },
-    openGraph: { ...baseOpenGraph, title, description: service.intro, url },
+    openGraph: { ...baseOpenGraph, title, description, url },
   };
 }
 
@@ -34,6 +36,7 @@ export default async function ServiceDetailPage({ params }) {
 
   return (
     <main>
+      <JsonLd data={serviceSchema(service)} />
       {/* ───────── HERO ───────── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-parchment to-[#E4EAFF]">
         <div className="hero-atmos" aria-hidden>
@@ -59,7 +62,15 @@ export default async function ServiceDetailPage({ params }) {
               </div>
             </Reveal>
             <Reveal delay={0.1}>
-              <h1 className="display-md text-black">{service.title}</h1>
+              <h1 className="display-md text-black">
+                {service.title}
+                {service.h1Suffix && " "}
+                {service.h1Suffix && (
+                  <span className="mt-3 block text-lg font-semibold normal-case tracking-normal text-black/55 sm:text-2xl">
+                    {service.h1Suffix}
+                  </span>
+                )}
+              </h1>
             </Reveal>
             <Reveal delay={0.15}>
               <p className="mt-6 max-w-[48ch] text-lg leading-relaxed text-black/70">

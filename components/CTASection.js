@@ -76,7 +76,7 @@ export default function CTASection() {
 
             {footer.columns.map((col) => (
               <div key={col.heading}>
-                <h4 className="label mb-5 text-white/50">{col.heading}</h4>
+                <h2 className="label mb-5 text-white/50">{col.heading}</h2>
                 {col.links.map((l) => (
                   <Link
                     key={l.label}

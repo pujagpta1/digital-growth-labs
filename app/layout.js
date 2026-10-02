@@ -7,6 +7,7 @@ import ScrollAnimations from "@/components/ScrollAnimations";
 import AuditModal from "@/components/AuditModal";
 import Analytics from "@/components/Analytics";
 import { SITE_URL, baseOpenGraph } from "@/lib/site";
+import { JsonLd, siteSchema } from "@/lib/schema";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,9 +25,9 @@ const caveat = Caveat({
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Digital Growth Labs — Premium Digital Growth Studio · Vancouver",
+  title: "Vancouver Local SEO & Marketing Agency | Digital Growth Labs",
   description:
-    "A Vancouver-based digital growth studio. Google Business Profile, SEO, paid media, web, social and delivery platforms — whatever it takes to grow your online presence.",
+    "Vancouver digital marketing agency for local businesses: Google Business Profile, local SEO, Google & Meta ads, websites and delivery apps. Book a free audit.",
   alternates: { canonical: "/" },
   openGraph: { ...baseOpenGraph, url: "/" },
   twitter: { card: "summary_large_image" },
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${caveat.variable}`}>
       <body className="cursor-none-desktop">
+        <JsonLd data={siteSchema()} />
         <ScrollAnimations />
         <CustomCursor />
         <ScrollProgress />

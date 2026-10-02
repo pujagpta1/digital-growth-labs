@@ -91,28 +91,24 @@ export default function HomePage() {
         />
 
         <div className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-1 flex-col justify-center px-5 pb-10 pt-28 sm:px-8">
-          <span data-anim="hero-sub" className="kicker" style={{ opacity: 0 }}>
+          <h1 data-anim="hero-sub" className="kicker" style={{ opacity: 0 }}>
             {h.hero.eyebrow}
-          </span>
+          </h1>
 
           <div data-anim="hero-parallax" className="mt-6">
-            <h1 className="hero-h1 text-black">
+            <div className="hero-h1 text-black">
               <HeroWord>{h.hero.line1}</HeroWord>
-            </h1>
-            <h1 className="hero-h1 text-black">
+            </div>
+            <div className="hero-h1 text-black">
               <HeroWord>{h.hero.line2Pre}</HeroWord>
               <HeroWord className="hand text-[1.05em]">{h.hero.line2Accent}</HeroWord>
-            </h1>
-            <h1 className="hero-h1 text-black">
+            </div>
+            <div className="hero-h1 text-black">
               <HeroWord>{h.hero.line3}</HeroWord>
-            </h1>
+            </div>
           </div>
 
-          <p
-            data-anim="hero-sub"
-            className="mt-8 max-w-[52ch] text-base leading-relaxed text-black/70 sm:text-lg"
-            style={{ opacity: 0 }}
-          >
+          <p className="hero-tagline-in mt-8 max-w-[52ch] text-base leading-relaxed text-black/70 sm:text-lg">
             {h.hero.tagline}
           </p>
 
@@ -185,7 +181,7 @@ export default function HomePage() {
               data-cursor="link"
               className="svc-card-btn"
             >
-              Learn More
+              Learn more<span className="sr-only"> about {s.title}</span>
             </Link>
           </div>
         </div>

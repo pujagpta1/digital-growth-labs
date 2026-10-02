@@ -5,11 +5,11 @@ import CTASection from "@/components/CTASection";
 import { about } from "@/lib/content";
 
 export const metadata = {
-  title: "About — Digital Growth Lab",
+  title: "About Us — Vancouver Marketing Studio | Digital Growth Labs",
   description:
     "A small, blunt growth team that treats your revenue like our own. Who we are, who we work with, and how we think.",
   alternates: { canonical: "/about" },
-  openGraph: { ...baseOpenGraph, title: "About — Digital Growth Lab", description: "A small, blunt growth team that treats your revenue like our own. Who we are, who we work with, and how we think.", url: "/about" },
+  openGraph: { ...baseOpenGraph, title: "About Us — Vancouver Marketing Studio | Digital Growth Labs", description: "A small, blunt growth team that treats your revenue like our own. Who we are, who we work with, and how we think.", url: "/about" },
 };
 
 export default function AboutPage() {
@@ -19,13 +19,13 @@ export default function AboutPage() {
       <section data-nav-dark className="bg-ink text-white">
         <div className="mx-auto max-w-[1500px] px-5 pb-28 pt-36 sm:px-8 sm:pb-40 sm:pt-52">
           <Reveal>
-            <h2 className="display-md text-white">
+            <h1 className="display-md text-white">
               {about.tagline.pre}{" "}
               <span className="font-hand normal-case text-white underline decoration-2 underline-offset-8">
                 {about.tagline.accent}
               </span>
               {about.tagline.post}
-            </h2>
+            </h1>
           </Reveal>
         </div>
       </section>

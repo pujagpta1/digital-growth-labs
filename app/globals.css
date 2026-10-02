@@ -901,3 +901,9 @@ body {
   color: #5b6573; /* graphite 500 */
   font-size: 0.9rem;
 }
+
+/* Hero tagline: visible from first paint (it is the mobile LCP element),
+   with a transform-only entrance so it never waits on JavaScript. */
+@keyframes hero-tagline-in { from { transform: translateY(18px); } to { transform: none; } }
+.hero-tagline-in { animation: hero-tagline-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
+@media (prefers-reduced-motion: reduce) { .hero-tagline-in { animation: none; } }

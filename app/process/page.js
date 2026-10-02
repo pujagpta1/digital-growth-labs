@@ -5,11 +5,11 @@ import CTASection from "@/components/CTASection";
 import { process } from "@/lib/content";
 
 export const metadata = {
-  title: "Our Process — Digital Growth Lab",
+  title: "Our Process — How We Grow Local Businesses | DGL",
   description:
     "How we build compounding growth as a system: map, find the bottleneck, build the funnel, scale what works.",
   alternates: { canonical: "/process" },
-  openGraph: { ...baseOpenGraph, title: "Our Process — Digital Growth Lab", description: "How we build compounding growth as a system: map, find the bottleneck, build the funnel, scale what works.", url: "/process" },
+  openGraph: { ...baseOpenGraph, title: "Our Process — How We Grow Local Businesses | DGL", description: "How we build compounding growth as a system: map, find the bottleneck, build the funnel, scale what works.", url: "/process" },
 };
 
 export default function ProcessPage() {
@@ -25,12 +25,12 @@ export default function ProcessPage() {
 
         <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 text-center sm:px-8">
           <Reveal>
-            <h1 className="display text-black">
+            <p className="display text-black" aria-hidden="true">
               <span className="hand text-[0.85em]">{process.hero.accent}</span>
-            </h1>
+            </p>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="display text-black">{process.hero.main}</h1>
+            <h1 className="display text-black"><span className="sr-only">Our local marketing </span>{process.hero.main}</h1>
           </Reveal>
         </div>
 
