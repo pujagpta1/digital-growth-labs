@@ -60,7 +60,7 @@ export default function CTASection() {
       {/* ───────── FOOTER ───────── */}
       <footer className="border-t border-white/10 bg-ink text-white">
         <div className="mx-auto max-w-[1280px] px-5 py-20 sm:px-8">
-          <div className="grid gap-12 md:grid-cols-[1.8fr_1fr_1fr]">
+          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
             <div>
               <div className="mb-5 flex items-center gap-3">
                 <Logo className="h-9 w-9 shrink-0 text-white" />

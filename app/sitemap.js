@@ -1,5 +1,6 @@
 import { SITE_URL } from "@/lib/site";
 import { services } from "@/lib/services";
+import { industries } from "@/lib/industries";
 
 export default function sitemap() {
   const now = new Date();
@@ -10,6 +11,12 @@ export default function sitemap() {
     ...services.map((s) => ({
       path: `/services/${s.slug}`,
       priority: 0.9,
+      changeFrequency: "monthly",
+    })),
+    { path: "/industries", priority: 0.8, changeFrequency: "monthly" },
+    ...industries.map((i) => ({
+      path: `/industries/${i.slug}`,
+      priority: 0.8,
       changeFrequency: "monthly",
     })),
   ];

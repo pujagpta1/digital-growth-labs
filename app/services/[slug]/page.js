@@ -6,7 +6,9 @@ import AuditButton from "@/components/AuditButton";
 import CTASection from "@/components/CTASection";
 import ServiceIcon from "@/components/ServiceIcon";
 import { services, getService } from "@/lib/services";
-import { JsonLd, serviceSchema } from "@/lib/schema";
+import { JsonLd, serviceSchema, faqSchema } from "@/lib/schema";
+import { serviceDetails } from "@/lib/serviceDetails";
+import { CardGrid, Steps, Prose, Faqs } from "@/components/DetailSections";
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -33,10 +35,12 @@ export default async function ServiceDetailPage({ params }) {
   if (!service) notFound();
 
   const others = services.filter((s) => s.slug !== slug);
+  const d = serviceDetails[slug];
 
   return (
     <main>
       <JsonLd data={serviceSchema(service)} />
+      {d?.faqs && <JsonLd data={faqSchema(d.faqs)} />}
       {/* ───────── HERO ───────── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-parchment to-[#E4EAFF]">
         <div className="hero-atmos" aria-hidden>
@@ -136,6 +140,16 @@ export default async function ServiceDetailPage({ params }) {
           </div>
         </div>
       </section>
+
+      {/* ───────── LONG-FORM ───────── */}
+      {d && (
+        <>
+          <CardGrid kicker="Who it's for" title={d.forWhoTitle} items={d.forWho} />
+          <Steps title={`How our ${service.title.toLowerCase()} works`} steps={d.steps} />
+          <Prose kicker="Why Digital Growth Labs" title="One team, every channel." paragraphs={d.why} />
+          <Faqs title={`${service.title}: common questions`} faqs={d.faqs} />
+        </>
+      )}
 
       {/* ───────── OTHER SERVICES ───────── */}
       <section className="border-t border-black/10 bg-[#F6F6F2] py-20">
