@@ -5,6 +5,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollAnimations from "@/components/ScrollAnimations";
 import AuditModal from "@/components/AuditModal";
+import Analytics from "@/components/Analytics";
 import { SITE_URL, baseOpenGraph } from "@/lib/site";
 
 const inter = Inter({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         {children}
         <AuditModal />
+        <Analytics />
       </body>
     </html>
   );

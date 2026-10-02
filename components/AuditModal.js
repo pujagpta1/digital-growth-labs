@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { brand, home } from "@/lib/content";
+import { trackEvent } from "@/lib/analytics";
 
 const form = home.auditForm;
 
@@ -106,8 +107,10 @@ export default function AuditModal() {
           }),
         });
         if (res.ok) {
+          trackEvent("generate_lead", { form_name: "free_audit", method: "formspree" });
           setSubmitted(true);
         } else {
+          trackEvent("audit_form_error", { form_name: "free_audit", status: res.status });
           setError(true);
         }
       } catch {
@@ -130,6 +133,7 @@ export default function AuditModal() {
     const mailto = `mailto:${brand.email}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(lines.join("\n"))}`;
+    trackEvent("generate_lead", { form_name: "free_audit", method: "mailto" });
     window.location.href = mailto;
     setSubmitted(true);
   };
