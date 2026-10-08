@@ -2,6 +2,14 @@
  * ServiceIcon — line icon per service, inherits currentColor.
  */
 const PATHS = {
+  // Card terminal — Clover online ordering
+  pos: (
+    <>
+      <rect x="6" y="3.5" width="12" height="17" rx="2" />
+      <path d="M9 7h6v3.5H9z" />
+      <path d="M9 14h.01M12 14h.01M15 14h.01M9 17h.01M12 17h.01M15 17h.01" />
+    </>
+  ),
   // Trophy — sports academies
   trophy: (
     <>
