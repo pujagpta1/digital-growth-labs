@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "babylovegrowth-next-js-blog": "^0.2.4",
     "gsap": "^3.12.5",
     "next": "^16.2.7",
     "react": "19.0.0",
