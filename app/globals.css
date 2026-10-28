@@ -907,3 +907,28 @@ body {
 @keyframes hero-tagline-in { from { transform: translateY(18px); } to { transform: none; } }
 .hero-tagline-in { animation: hero-tagline-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
 @media (prefers-reduced-motion: reduce) { .hero-tagline-in { animation: none; } }
+
+/* ───────── BabyLoveGrowth article bodies (/blog/[slug]) — matches PostBody styling ───────── */
+.blg-content { font-size: 1.05rem; line-height: 1.75; color: rgb(0 0 0 / 0.75); }
+.blg-content > * + * { margin-top: 1.5rem; }
+.blg-content h1, .blg-content h2 { padding-top: 1.5rem; font-size: 1.5rem; line-height: 1.2; font-weight: 800; letter-spacing: -0.025em; color: #000; }
+@media (min-width: 640px) { .blg-content h1, .blg-content h2 { font-size: 1.875rem; } }
+.blg-content h3 { padding-top: 0.5rem; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.025em; color: #000; }
+.blg-content h4 { font-size: 1.05rem; font-weight: 700; color: #000; }
+.blg-content strong, .blg-content b { font-weight: 600; color: #000; }
+.blg-content a { color: #2D5BFF; text-decoration: underline; text-underline-offset: 2px; }
+.blg-content a:hover { color: var(--tomato, #E8442A); }
+.blg-content ul, .blg-content ol { padding-left: 1.5rem; }
+.blg-content ul { list-style: disc; }
+.blg-content ol { list-style: decimal; }
+.blg-content li + li { margin-top: 0.75rem; }
+.blg-content li::marker { color: #2D5BFF; font-weight: 700; }
+.blg-content img { max-width: 100%; height: auto; border-radius: 1.25rem; }
+.blg-content figure figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: rgb(0 0 0 / 0.5); }
+.blg-content blockquote { border-left: 3px solid #2D5BFF; padding-left: 1rem; color: rgb(0 0 0 / 0.65); }
+.blg-content hr { border: 0; border-top: 1px solid rgb(0 0 0 / 0.1); }
+.blg-content table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 0.95rem; }
+.blg-content th, .blg-content td { border: 1px solid rgb(0 0 0 / 0.1); padding: 0.6rem 0.8rem; text-align: left; vertical-align: top; }
+.blg-content th { background: rgb(228 234 255 / 0.6); color: #000; font-weight: 600; }
+.blg-content pre, .blg-content code { font-size: 0.9em; background: rgb(0 0 0 / 0.05); border-radius: 0.4rem; padding: 0.1rem 0.35rem; }
+.blg-content pre { padding: 1rem; overflow-x: auto; }
