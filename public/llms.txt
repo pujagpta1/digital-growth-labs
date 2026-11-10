@@ -1,0 +1,52 @@
+# Digital Growth Labs
+
+> Digital Growth Labs (DGL) is a digital marketing agency in Vancouver, BC. It helps local businesses across Metro Vancouver, the Fraser Valley and Vancouver Island grow online through Google Business Profile management, local SEO, Google & Meta ads, web design, social media, delivery-app management (DoorDash, Uber Eats, SkipTheDishes) and commission-free Clover online ordering.
+
+- Location: Vancouver, BC, Canada
+- Service area: Metro Vancouver, Richmond, the Fraser Valley and Vancouver Island
+- Clients: restaurants, salons and spas, florists, retail, hospitality, multi-location brands, and high-ticket local businesses (sports academies, med spas, dental, auto detailing/PPF, renovators and custom builders)
+- Contact: admin@digitalgrowthlabs.ca · 778-323-1804
+- Free, no-obligation business audit available: https://www.digitalgrowthlabs.ca
+
+DGL works as one accountable team across every channel instead of selling a single service. Every engagement starts with an audit of the business's full online presence, followed by a focused strategy, execution across channels, plain-language reporting and ongoing optimization.
+
+## Services
+
+- [Google Business Profile Management](https://www.digitalgrowthlabs.ca/services/google-business-profile): Weekly posts, photos, review replies and profile optimization to rank in the Google Maps local pack.
+- [Local SEO](https://www.digitalgrowthlabs.ca/services/seo): Keyword research, technical fixes, content and citations for Vancouver and Lower Mainland businesses.
+- [Google & Meta Ads](https://www.digitalgrowthlabs.ca/services/google-meta-ads): Paid search and social campaigns: strategy, creative, targeting, retargeting and transparent reporting.
+- [Web Design & Development](https://www.digitalgrowthlabs.ca/services/web-design): Fast, mobile-first, SEO-ready small business websites, including Clover POS and online ordering integration.
+- [Social Media Management](https://www.digitalgrowthlabs.ca/services/social-media): Content creation, scheduling, community engagement and monthly reporting.
+- [Delivery Platform Setup](https://www.digitalgrowthlabs.ca/services/delivery-platforms): DoorDash, Uber Eats and SkipTheDishes onboarding, menu and photo optimization, promos and ratings management for BC restaurants.
+- [Clover Online Ordering](https://www.digitalgrowthlabs.ca/services/clover-online-ordering): Commission-free online ordering on a restaurant's own website, connected to Clover POS so paid orders print straight to the kitchen.
+
+## Industries
+
+- [All industries](https://www.digitalgrowthlabs.ca/industries): Overview of the high-ticket local businesses DGL markets.
+- [Sports Academies](https://www.digitalgrowthlabs.ca/industries/sports-academies): Golf, hockey, tennis and training centres in Vancouver and Richmond.
+- [Med Spas & Aesthetic Clinics](https://www.digitalgrowthlabs.ca/industries/med-spas): Marketing planned around BC advertising standards.
+- [Dental & Orthodontics](https://www.digitalgrowthlabs.ca/industries/dental): Cosmetic dentists and orthodontists (implants, veneers, Invisalign).
+- [Auto Detailing & PPF](https://www.digitalgrowthlabs.ca/industries/auto-detailing): PPF, ceramic coating, wrap and detailing studios and car dealers.
+- [Renovators & Custom Builders](https://www.digitalgrowthlabs.ca/industries/home-improvement): Cabinet makers, closet companies, renovators and custom home builders.
+
+## Company
+
+- [About](https://www.digitalgrowthlabs.ca/about): Who DGL is, who it works with and how it thinks about growth.
+- [Our Process](https://www.digitalgrowthlabs.ca/process): The five-step method: audit, strategy, build and run as one team, plain-language reporting, optimize and scale.
+
+## Guides
+
+- [How to get more Google reviews](https://www.digitalgrowthlabs.ca/blog/how-to-get-more-google-reviews): How to ask for reviews within Google's rules and Canadian law, and how to reply.
+- [How to rank your restaurant higher on Google Maps](https://www.digitalgrowthlabs.ca/blog/google-maps-ranking-for-restaurants): Profile, menu, photo, review and website fixes for BC restaurants.
+- [Google Business Profile not showing up?](https://www.digitalgrowthlabs.ca/blog/google-business-profile-not-showing-up): Nine common reasons and fixes.
+- [Google Business Profile audit checklist](https://www.digitalgrowthlabs.ca/blog/google-business-profile-audit): A 10-step self-audit ranked by priority.
+- [What happened to Google Business Profile Q&A](https://www.digitalgrowthlabs.ca/blog/what-happened-to-google-business-profile-qa): The AI "Ask" feature in Maps and how to keep answers accurate.
+- [How much does SEO cost in Canada?](https://www.digitalgrowthlabs.ca/blog/how-much-does-seo-cost-in-canada): Typical price ranges, pricing models and red flags.
+- [How to rank higher on Uber Eats, DoorDash & SkipTheDishes](https://www.digitalgrowthlabs.ca/blog/how-to-rank-higher-on-uber-eats-doordash-skipthedishes): What delivery apps reward and a checklist for restaurants.
+- [Restaurant POS integration](https://www.digitalgrowthlabs.ca/blog/restaurant-pos-integration): How online orders flow into a POS and how to set it up and test it.
+- [Geofencing ads](https://www.digitalgrowthlabs.ca/blog/geofencing-ads): How they work for Canadian local businesses and the privacy rules to follow.
+
+## Optional
+
+- [Blog](https://www.digitalgrowthlabs.ca/blog): All local marketing guides for BC businesses.
+- [Sitemap](https://www.digitalgrowthlabs.ca/sitemap.xml)
