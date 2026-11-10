@@ -7,9 +7,9 @@ import { about } from "@/lib/content";
 export const metadata = {
   title: "About Us — Vancouver Marketing Studio | Digital Growth Labs",
   description:
-    "A small, blunt growth team that treats your revenue like our own. Who we are, who we work with, and how we think.",
+    "Meet Digital Growth Labs, a Vancouver marketing studio running Google Business Profile, SEO, ads, websites, social and delivery apps as one team.",
   alternates: { canonical: "/about" },
-  openGraph: { ...baseOpenGraph, title: "About Us — Vancouver Marketing Studio | Digital Growth Labs", description: "A small, blunt growth team that treats your revenue like our own. Who we are, who we work with, and how we think.", url: "/about" },
+  openGraph: { ...baseOpenGraph, title: "About Us — Vancouver Marketing Studio | Digital Growth Labs", description: "Meet Digital Growth Labs, a Vancouver marketing studio running Google Business Profile, SEO, ads, websites, social and delivery apps as one team.", url: "/about" },
 };
 
 export default function AboutPage() {
