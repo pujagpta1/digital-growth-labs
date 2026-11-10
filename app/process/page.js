@@ -7,9 +7,9 @@ import { process } from "@/lib/content";
 export const metadata = {
   title: "Our Process — How We Grow Local Businesses | DGL",
   description:
-    "How we build compounding growth as a system: map, find the bottleneck, build the funnel, scale what works.",
+    "Our 5-step local marketing process: audit every channel, set a focused strategy, run it as one team, report in plain language and scale what works.",
   alternates: { canonical: "/process" },
-  openGraph: { ...baseOpenGraph, title: "Our Process — How We Grow Local Businesses | DGL", description: "How we build compounding growth as a system: map, find the bottleneck, build the funnel, scale what works.", url: "/process" },
+  openGraph: { ...baseOpenGraph, title: "Our Process — How We Grow Local Businesses | DGL", description: "Our 5-step local marketing process: audit every channel, set a focused strategy, run it as one team, report in plain language and scale what works.", url: "/process" },
 };
 
 export default function ProcessPage() {
